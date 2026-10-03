@@ -86,6 +86,32 @@ class Config(unittest.TestCase):
         for pat in ("dist/", "*.iso", ".env", "*.key"):
             self.assertIn(pat, g)
 
+    def test_hooks_live_in_live_or_normal_subdirectory(self):
+        # Debian Live Manual: hooks must be in config/hooks/live or config/hooks/normal; files placed
+        # directly in config/hooks/ are not run by current live-build (this bit us once: os-release hook ignored).
+        hooks = ROOT / "build/config/hooks"
+        self.assertEqual([p.name for p in hooks.iterdir() if p.is_file()], [])
+        found = [*hooks.glob("live/*.hook.chroot"), *hooks.glob("normal/*.hook.chroot")]
+        self.assertTrue(found)
+
+    def test_xfce_wallpaper_covers_known_monitor_names_in_skel_and_system_defaults(self):
+        for base in ("etc/skel/.config", "etc/xdg"):
+            xml = (ROOT / "build/config/includes.chroot" / base / "xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml")
+            doc = minidom.parse(str(xml))
+            names = {p.getAttribute("name") for p in doc.getElementsByTagName("property")}
+            for m in ("monitor0", "monitor1", "monitorVirtual-1", "monitorVirtual1"):
+                self.assertIn(m, names, f"{base}: {m}")
+            values = [p.getAttribute("value") for p in doc.getElementsByTagName("property") if p.getAttribute("name") == "last-image"]
+            self.assertEqual(set(values), {"/usr/share/backgrounds/aegisos/aegis-dark.svg"})
+            self.assertEqual(len(values), 8)
+
+    def test_workflows_use_node24_action_majors_and_pinned_runner(self):
+        for wf in (ROOT / ".github/workflows").glob("*.yml"):
+            t = wf.read_text()
+            self.assertNotIn("actions/checkout@v4", t)
+            self.assertNotIn("actions/upload-artifact@v4", t)
+            self.assertNotIn("ubuntu-latest", t)
+
     def test_security_hardening_not_applied_by_any_config(self):
         self.assertFalse(list((ROOT / "build/config/includes.chroot").rglob("*sysctl*")))
 

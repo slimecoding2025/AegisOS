@@ -6,7 +6,7 @@ import unittest
 from tests import ROOT
 
 SCRIPTS = sorted([*(ROOT / "scripts").glob("*.sh"), ROOT / "build/config/auto/config",
-                  *(ROOT / "build/config/hooks").glob("*")])
+                  *(p for p in (ROOT / "build/config/hooks").rglob("*") if p.is_file())])
 
 
 class ShellScripts(unittest.TestCase):

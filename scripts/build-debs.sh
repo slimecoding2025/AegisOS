@@ -49,6 +49,7 @@ for f in aegis-tool-manager aegis-docs; do
   install -D -m 0644 "$ROOT/configs/desktop/applications/$f.desktop" "$d/usr/share/applications/$f.desktop"
 done
 install -D -m 0644 "$ROOT/configs/desktop/autostart/aegis-welcome.desktop" "$d/etc/xdg/autostart/aegis-welcome.desktop"
+install -D -m 0644 "$ROOT/configs/desktop/autostart/aegis-desktop-setup.desktop" "$d/etc/xdg/autostart/aegis-desktop-setup.desktop"
 mkdir -p "$d/usr/share/doc/aegis-branding"
 cp "$ROOT"/docs/*.md "$d/usr/share/doc/aegis-branding/"
 finish aegis-branding "$d"

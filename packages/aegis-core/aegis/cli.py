@@ -5,7 +5,7 @@ import argparse
 import json
 import sys
 
-from . import __version__, branding, doctor, hardening, manifest, pkg, security_center, tools
+from . import __version__, branding, desktop, doctor, hardening, manifest, pkg, security_center, tools
 
 EXIT_OK, EXIT_ERROR = 0, 1
 
@@ -45,6 +45,12 @@ def cmd_welcome(a):
     if text:
         print(text)
     return EXIT_OK
+
+
+def cmd_desktop_setup(a):
+    res = desktop.apply_wallpaper(force=a.force, dry_run=a.dry_run)
+    print(json.dumps(res, indent=2))
+    return EXIT_OK if res["status"] in ("ok", "skipped", "dry-run") else EXIT_ERROR
 
 
 def cmd_banner(a):
@@ -320,6 +326,8 @@ def build_parser() -> argparse.ArgumentParser:
 
     add("version", cmd_version, "show version")
     add("banner", cmd_banner, "print the AegisOS banner")
+    s = add("desktop-setup", cmd_desktop_setup, "apply AegisOS desktop defaults for this user (once)")
+    s.add_argument("--force", action="store_true"); s.add_argument("--dry-run", action="store_true")
     s = add("welcome", cmd_welcome, "first-boot welcome (shown once)"); s.add_argument("--force", action="store_true")
     s = add("search", cmd_search, "search the tool manifest"); s.add_argument("query")
     s = add("info", cmd_info, "show tool metadata"); s.add_argument("name"); s.add_argument("--json", action="store_true")

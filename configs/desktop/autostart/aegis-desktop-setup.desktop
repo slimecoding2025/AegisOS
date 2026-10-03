@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=AegisOS Desktop Setup
+Comment=Apply AegisOS desktop defaults once per user
+Exec=aegis desktop-setup
+Terminal=false
+OnlyShowIn=XFCE;

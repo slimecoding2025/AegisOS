@@ -11,8 +11,9 @@ class Doctor(unittest.TestCase):
         d = tempfile.TemporaryDirectory()
         self.addCleanup(d.cleanup)
         apt = Path(d.name, "etc/apt")
-        apt.mkdir(parents=True)
-        (apt / name).write_text(text)
+        target = apt if name == "sources.list" else apt / "sources.list.d"
+        target.mkdir(parents=True)
+        (target / name).write_text(text)
         return d.name
 
     def test_repositories_pass(self):
@@ -31,6 +32,34 @@ class Doctor(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             self.assertEqual(doctor.check_repositories(d).status, doctor.FAIL)
         self.assertEqual(doctor.check_repositories(self.mkroot("# only comments\n")).status, doctor.FAIL)
+
+    def test_commented_trusted_yes_is_ignored(self):
+        r = doctor.check_repositories(self.mkroot("# deb [trusted=yes] https://x.invalid/ a b\ndeb https://deb.debian.org/debian trixie main\n"))
+        self.assertEqual(r.status, doctor.PASS)
+
+    def test_unsigned_repo_detail_names_file_and_line(self):
+        r = doctor.check_repositories(self.mkroot("deb [ trusted=yes ] file:/root/pkgs ./\n", name="live.list"))
+        self.assertEqual(r.status, doctor.WARN)
+        self.assertIn("live.list", r.detail)
+        self.assertIn("file:/root/pkgs", r.detail)
+
+    def test_unsigned_local_file_repo_is_warning_not_failure(self):
+        # Exact layout observed on the first AegisOS live boot (2026-10-03).
+        text = ("deb [trusted=yes] file:/run/live/medium trixie main contrib non-free-firmware\n"
+                "deb http://deb.debian.org/debian/ trixie main contrib non-free-firmware\n")
+        r = doctor.check_repositories(self.mkroot(text))
+        self.assertEqual(r.status, doctor.WARN)
+        self.assertIn("unsigned local repository", r.detail)
+        self.assertIn("plain-HTTP", r.detail)
+
+    def test_unsigned_network_repo_still_fails_even_next_to_local_one(self):
+        text = ("deb [trusted=yes] file:/run/live/medium trixie main\n"
+                "deb [trusted=yes] http://evil.invalid/debian trixie main\n")
+        self.assertEqual(doctor.check_repositories(self.mkroot(text)).status, doctor.FAIL)
+
+    def test_deb822_trusted_yes_fails(self):
+        r = doctor.check_repositories(self.mkroot("Types: deb\nURIs: https://x.invalid\nSuites: stable\nTrusted: yes\n", name="x.sources"))
+        self.assertEqual(r.status, doctor.FAIL)
 
     def test_exit_codes(self):
         C = doctor.Check

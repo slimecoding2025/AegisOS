@@ -55,14 +55,30 @@ def check_repositories(root: str = "/") -> Check:
         files += sorted(p for p in d.iterdir() if p.suffix in (".list", ".sources"))
     if not files:
         return Check("repositories", FAIL, "no APT sources configured")
-    text = "\n".join(f.read_text(errors="replace") for f in files)
-    active = [l for l in text.splitlines() if l.strip() and not l.strip().startswith("#")]
+    active: list[tuple[Path, str]] = []
+    for f in files:
+        for line in f.read_text(errors="replace").splitlines():
+            if line.strip() and not line.strip().startswith("#"):
+                active.append((f, line))
     if not active:
         return Check("repositories", FAIL, "APT sources contain no active entries")
-    if "trusted=yes" in text or "allow-insecure=yes" in text:
-        return Check("repositories", FAIL, "a repository disables signature verification")
-    if any(l.strip().startswith("deb http://") or "URIs: http://" in l for l in active):
-        return Check("repositories", WARN, "plain-HTTP repository configured (APT still verifies signatures)")
+    warnings: list[str] = []
+    for f, line in active:
+        low = line.lower().replace(" ", "")
+        insecure = ("trusted=yes" in low or "allow-insecure=yes" in low
+                    or low.startswith("trusted:yes") or low.startswith("allow-insecure:yes"))
+        if insecure:
+            # An unsigned repository fetched over the network is a failure. An unsigned repository on a
+            # local file: path (for example the read-only live medium) is reported, but only as a warning.
+            if "file:" in line and "http" not in line:
+                warnings.append(f"{f.name}: unsigned local repository (signature check disabled): {line.strip()[:100]}")
+            else:
+                return Check("repositories", FAIL, f"{f.name}: signature verification disabled in: {line.strip()[:120]}")
+        elif line.strip().startswith("deb http://") or line.strip().startswith("URIs: http://"):
+            if not any("plain-HTTP" in w for w in warnings):
+                warnings.append(f"plain-HTTP repository in {f.name} (APT still verifies signatures)")
+    if warnings:
+        return Check("repositories", WARN, "; ".join(warnings))
     return Check("repositories", PASS, f"{len(files)} source file(s), signature checks enabled")
 
 
