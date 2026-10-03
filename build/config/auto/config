@@ -1,0 +1,23 @@
+#!/bin/sh
+# live-build "auto/config": executed by `lb config`. Options below were checked against lb_config(1) for trixie.
+set -e
+
+: "${AEGIS_DEBIAN_SUITE:=trixie}"
+: "${AEGIS_ARCH:=amd64}"
+: "${AEGIS_ARCHIVE_AREAS:=main contrib non-free-firmware}"
+: "${AEGIS_BOOTLOADERS:=grub-efi}"
+: "${AEGIS_INSTALLER:=live}"
+: "${AEGIS_VERSION:=0.0.0}"
+
+lb config noauto \
+    --distribution "${AEGIS_DEBIAN_SUITE}" \
+    --architectures "${AEGIS_ARCH}" \
+    --binary-images iso-hybrid \
+    --bootloaders "${AEGIS_BOOTLOADERS}" \
+    --archive-areas "${AEGIS_ARCHIVE_AREAS}" \
+    --debian-installer "${AEGIS_INSTALLER}" \
+    --bootappend-live "boot=live components quiet" \
+    --iso-application "AegisOS" \
+    --iso-publisher "AegisOS Project" \
+    --iso-volume "AEGISOS_$(echo "${AEGIS_VERSION}" | tr '.' '_')" \
+    "${@}"

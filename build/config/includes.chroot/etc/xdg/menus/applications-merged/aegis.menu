@@ -1,0 +1,30 @@
+<!DOCTYPE Menu PUBLIC "-//freedesktop//DTD Menu 1.0//EN" "http://www.freedesktop.org/standards/menu-spec/menu-1.0.dtd">
+<Menu>
+  <Name>Applications</Name>
+  <Menu><Name>Aegis-Network-Security</Name><Directory>aegis-network-security.directory</Directory>
+    <Include><Category>X-Aegis-Network-Security</Category></Include></Menu>
+  <Menu><Name>Aegis-Web-Security</Name><Directory>aegis-web-security.directory</Directory>
+    <Include><Category>X-Aegis-Web-Security</Category></Include></Menu>
+  <Menu><Name>Aegis-OSINT</Name><Directory>aegis-osint.directory</Directory>
+    <Include><Category>X-Aegis-OSINT</Category></Include></Menu>
+  <Menu><Name>Aegis-Digital-Forensics</Name><Directory>aegis-digital-forensics.directory</Directory>
+    <Include><Category>X-Aegis-Digital-Forensics</Category></Include></Menu>
+  <Menu><Name>Aegis-Blue-Team</Name><Directory>aegis-blue-team.directory</Directory>
+    <Include><Category>X-Aegis-Blue-Team</Category></Include></Menu>
+  <Menu><Name>Aegis-SOC</Name><Directory>aegis-soc.directory</Directory>
+    <Include><Category>X-Aegis-SOC</Category></Include></Menu>
+  <Menu><Name>Aegis-Reverse-Engineering</Name><Directory>aegis-reverse-engineering.directory</Directory>
+    <Include><Category>X-Aegis-Reverse-Engineering</Category></Include></Menu>
+  <Menu><Name>Aegis-Wireless</Name><Directory>aegis-wireless.directory</Directory>
+    <Include><Category>X-Aegis-Wireless</Category></Include></Menu>
+  <Menu><Name>Aegis-Cloud-Security</Name><Directory>aegis-cloud-security.directory</Directory>
+    <Include><Category>X-Aegis-Cloud-Security</Category></Include></Menu>
+  <Menu><Name>Aegis-Container-Security</Name><Directory>aegis-container-security.directory</Directory>
+    <Include><Category>X-Aegis-Container-Security</Category></Include></Menu>
+  <Menu><Name>Aegis-System-Administration</Name><Directory>aegis-system-administration.directory</Directory>
+    <Include><Category>X-Aegis-System-Administration</Category></Include></Menu>
+  <Menu><Name>Aegis-Development</Name><Directory>aegis-development.directory</Directory>
+    <Include><Category>X-Aegis-Development</Category></Include></Menu>
+  <Menu><Name>Aegis-Utilities</Name><Directory>aegis-utilities.directory</Directory>
+    <Include><Category>X-Aegis-Utilities</Category></Include></Menu>
+</Menu>

@@ -1,0 +1,9 @@
+Package: aegis-branding
+Version: @VERSION@
+Section: utils
+Priority: optional
+Architecture: all
+Maintainer: AegisOS Maintainers <maintainers@aegisos.invalid>
+Depends: aegis-core (= @VERSION@)
+Description: AegisOS branding: banner, wallpaper, desktop entries
+ Part of AegisOS ("Defend. Analyze. Understand."). Licensed under Apache-2.0.

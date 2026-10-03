@@ -1,0 +1,22 @@
+# build outputs
+dist/
+build/work/
+*.iso
+*.img
+*.qcow2
+# python
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+.venv/
+# secrets / local config
+.env
+*.key
+*.pem
+id_rsa*
+secrets/
+# editor
+*.swp
+.vscode/
+.idea/

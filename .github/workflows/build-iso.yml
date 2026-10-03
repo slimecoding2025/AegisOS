@@ -1,0 +1,38 @@
+name: build-iso
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "build/**"
+      - "scripts/build*.sh"
+      - "tools/manifest.yaml"
+      - "packages/**"
+permissions:
+  contents: read
+jobs:
+  iso:
+    runs-on: ubuntu-latest
+    # Clean Debian 13 environment. live-build needs privileges for debootstrap/chroot/loop mounts.
+    container:
+      image: debian:trixie
+      options: --privileged
+    steps:
+      - name: Install build dependencies
+        run: |
+          apt-get update
+          apt-get install -y live-build debootstrap xorriso squashfs-tools mtools dosfstools \
+            grub-efi-amd64-bin dpkg-dev python3 python3-yaml git ca-certificates
+      - uses: actions/checkout@v4
+      - name: Build ISO
+        run: make build
+      - name: Verify checksum
+        run: cd dist && sha256sum -c SHA256SUMS
+      - name: Upload ISO artifact (only reached if the build and checks above succeeded)
+        uses: actions/upload-artifact@v4
+        with:
+          name: aegisos-iso
+          path: |
+            dist/AegisOS-*-amd64.iso
+            dist/SHA256SUMS
+            dist/iso-boot-report.txt
+          if-no-files-found: error

@@ -1,0 +1,15 @@
+#!/bin/sh
+# Install AegisOS identification. Uses dpkg-divert so base-files upgrades do not overwrite it. (NOT VERIFIED)
+set -e
+VERSION="$(cat /usr/share/aegis/VERSION 2>/dev/null || echo 0.0.0)"
+dpkg-divert --local --rename --divert /usr/lib/os-release.debian --add /usr/lib/os-release
+cat > /usr/lib/os-release <<EOT
+PRETTY_NAME="AegisOS ${VERSION}"
+NAME="AegisOS"
+VERSION_ID="${VERSION}"
+VERSION="${VERSION}"
+ID=aegisos
+ID_LIKE=debian
+HOME_URL="https://github.com/aegisos/aegisos"
+EOT
+ln -sf ../usr/lib/os-release /etc/os-release

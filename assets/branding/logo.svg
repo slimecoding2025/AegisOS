@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="AegisOS logo">
+  <title>AegisOS</title>
+  <rect width="256" height="256" rx="40" fill="#0f1620"/>
+  <path d="M128 28 L212 60 V124 C212 176 176 214 128 232 C80 214 44 176 44 124 V60 Z"
+        fill="none" stroke="#4fa3d1" stroke-width="10" stroke-linejoin="round"/>
+  <path d="M128 70 L92 176 H112 L120 150 H136 L144 176 H164 Z M124 134 L128 118 L132 134 Z"
+        fill="#e6edf3" fill-rule="evenodd"/>
+</svg>

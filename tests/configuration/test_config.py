@@ -1,0 +1,94 @@
+import configparser
+import re
+import unittest
+import xml.dom.minidom as minidom
+
+from tests import ROOT
+
+
+class Config(unittest.TestCase):
+    def test_version_is_semver(self):
+        self.assertRegex((ROOT / "VERSION").read_text().strip(), r"^\d+\.\d+\.\d+$")
+
+    def test_debian_control_files(self):
+        v = (ROOT / "VERSION").read_text().strip()
+        for pkg in ("aegis-core", "aegis-cli", "aegis-tools", "aegis-security-center", "aegis-branding"):
+            text = (ROOT / "packages" / pkg / "DEBIAN" / "control").read_text()
+            self.assertIn(f"Package: {pkg}\n", text)
+            self.assertIn("Version: @VERSION@", text)
+            for dep in re.findall(r"\(= ([^)]+)\)", text):
+                self.assertEqual(dep, "@VERSION@")
+        self.assertTrue(v)
+
+    def test_profile_env_targets_trixie_uefi_amd64(self):
+        env = (ROOT / "build/profiles/default.env").read_text()
+        self.assertIn("AEGIS_DEBIAN_SUITE=trixie", env)
+        self.assertIn("AEGIS_BOOTLOADERS=grub-efi", env)
+        self.assertIn("AEGIS_ARCH=amd64", env)
+        self.assertNotIn("non-free ", env.replace("non-free-firmware", ""))  # plain non-free is not enabled
+
+    def test_lb_config_uses_only_verified_option_names(self):
+        text = (ROOT / "build/config/auto/config").read_text()
+        used = set(re.findall(r"--([a-z-]+)", text))
+        verified = {"distribution", "architectures", "binary-images", "bootloaders", "archive-areas",
+                    "debian-installer", "bootappend-live", "iso-application", "iso-publisher", "iso-volume"}
+        self.assertEqual(used - verified, set())
+        self.assertIn("iso-hybrid", text)
+
+    def test_package_lists_are_plain_names(self):
+        for f in (ROOT / "build/config/package-lists").glob("*.list.chroot"):
+            for line in f.read_text().splitlines():
+                if line.strip() and not line.startswith("#"):
+                    self.assertRegex(line.strip(), r"^[a-z0-9][a-z0-9.+-]+$", f"{f.name}: {line}")
+
+    def test_xml_configs_well_formed(self):
+        files = [*ROOT.glob("build/config/includes.chroot/**/*.xml"), *ROOT.glob("build/config/includes.chroot/**/*.menu")]
+        self.assertGreaterEqual(len(files), 4)
+        for f in files:
+            minidom.parse(str(f))
+
+    def test_menu_has_all_categories_with_directory_files(self):
+        menu = (ROOT / "build/config/includes.chroot/etc/xdg/menus/applications-merged/aegis.menu").read_text()
+        dirs = list((ROOT / "build/config/includes.chroot/usr/share/desktop-directories").glob("*.directory"))
+        self.assertEqual(menu.count("<Directory>"), 13)
+        self.assertEqual(len(dirs), 13)
+
+    def test_desktop_entries_parse_and_have_required_keys(self):
+        files = list((ROOT / "configs/desktop").glob("*/*.desktop"))
+        self.assertGreaterEqual(len(files), 4)
+        for f in files:
+            cp = configparser.ConfigParser(interpolation=None)
+            cp.optionxform = str
+            cp.read(f)
+            e = cp["Desktop Entry"]
+            self.assertEqual(e["Type"], "Application")
+            self.assertTrue(e["Name"] and e["Exec"])
+
+    def test_branding_assets_are_valid_svg(self):
+        for f in (ROOT / "assets/branding/logo.svg", ROOT / "assets/wallpapers/aegis-dark.svg"):
+            doc = minidom.parse(str(f))
+            self.assertEqual(doc.documentElement.tagName, "svg")
+
+    def test_wallpaper_path_matches_branding_package_install_path(self):
+        xml = (ROOT / "build/config/includes.chroot/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml").read_text()
+        self.assertIn("/usr/share/backgrounds/aegisos/aegis-dark.svg", xml)
+        self.assertIn("backgrounds/aegisos/aegis-dark.svg", (ROOT / "scripts/build-debs.sh").read_text())
+
+    def test_no_stray_brace_directories_and_no_secrets_files(self):
+        for p in ROOT.rglob("*"):
+            if ".git" in p.parts:
+                continue
+            self.assertNotIn("{", p.name, str(p))
+            self.assertNotIn(p.suffix, {".pem", ".key", ".iso"}, str(p))
+
+    def test_gitignore_blocks_artifacts(self):
+        g = (ROOT / ".gitignore").read_text()
+        for pat in ("dist/", "*.iso", ".env", "*.key"):
+            self.assertIn(pat, g)
+
+    def test_security_hardening_not_applied_by_any_config(self):
+        self.assertFalse(list((ROOT / "build/config/includes.chroot").rglob("*sysctl*")))
+
+
+if __name__ == "__main__":
+    unittest.main()

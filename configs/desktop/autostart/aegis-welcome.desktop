@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=AegisOS Welcome
+Comment=First-boot guide (shows once per user)
+Exec=xfce4-terminal --title "Welcome to AegisOS" --hold -e "aegis welcome"
+Terminal=false
+X-GNOME-Autostart-enabled=true

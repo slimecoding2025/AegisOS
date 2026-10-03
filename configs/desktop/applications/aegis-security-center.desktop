@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Aegis Security Center
+Comment=Local system security dashboard
+Exec=aegis-security-center
+Icon=security-high
+Terminal=false
+Categories=System;Security;

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<channel name="xfce4-keyboard-shortcuts" version="1.0">
+  <property name="commands" type="empty">
+    <property name="custom" type="empty">
+      <property name="&lt;Super&gt;t" type="string" value="xfce4-terminal"/>
+      <property name="&lt;Super&gt;s" type="string" value="aegis-security-center"/>
+      <property name="override" type="bool" value="true"/>
+    </property>
+  </property>
+</channel>

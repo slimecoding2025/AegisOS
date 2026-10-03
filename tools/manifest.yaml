@@ -1,0 +1,230 @@
+# AegisOS tool manifest - the single source of truth for the tool ecosystem.
+#
+# Honesty rules (enforced by `aegis manifest validate`):
+#  * `package` is a CANDIDATE Debian package name, not a verified one. It is
+#    resolved against the configured APT repositories at install time
+#    (`aegis manifest check-packages`). Tools with installation_method other
+#    than `apt` have no package assumed.
+#  * license / homepage / documentation / redistribution / version default to
+#    `unverified`. Nothing is invented. Fill these in only from the upstream
+#    project or the Debian package metadata, then record the source.
+#  * `bundled: true` (shipped inside the ISO) is only legal when the license is
+#    verified, redistribution is `allowed` and the method is `apt`.
+#  * `tier` states intent: core (planned for the ISO), optional (installable
+#    from APT), external (not from APT), containerized, development, specialized.
+schema_version: 1
+
+defaults:
+  bundled: false
+  license: unverified
+  homepage: unverified
+  documentation: unverified
+  redistribution: unverified
+  version: unverified
+  dependencies: []
+  package: null
+
+categories:
+  network:              {title: Network Security,   usage_notice: authorized}
+  dns:                  {title: Network Security,   usage_notice: authorized}
+  web:                  {title: Web Security,       usage_notice: authorized}
+  osint:                {title: OSINT,              usage_notice: authorized}
+  forensics:            {title: Digital Forensics}
+  blue-team:            {title: Blue Team}
+  soc:                  {title: SOC}
+  reverse-engineering:  {title: Reverse Engineering}
+  malware-analysis:     {title: Reverse Engineering, usage_notice: lab}
+  wireless:             {title: Wireless,           usage_notice: authorized}
+  password-auditing:    {title: Utilities,          usage_notice: authorized}
+  active-directory:     {title: Network Security,   usage_notice: authorized}
+  cloud:                {title: Cloud Security}
+  containers:           {title: Container Security}
+  privacy:              {title: Utilities}
+  cryptography:         {title: Utilities}
+  system-administration: {title: System Administration}
+  development:          {title: Development}
+
+# Desktop menu categories (informational; used by branding/menu generation).
+menu_categories:
+  - Network Security
+  - Web Security
+  - OSINT
+  - Digital Forensics
+  - Blue Team
+  - SOC
+  - Reverse Engineering
+  - Wireless
+  - Cloud Security
+  - Container Security
+  - System Administration
+  - Development
+  - Utilities
+
+profiles:
+  network:             {description: Network discovery and analysis,            categories: [network, dns]}
+  web:                 {description: Web application assessment tools,          categories: [web]}
+  osint:               {description: Open-source intelligence gathering,        categories: [osint]}
+  forensics:           {description: Digital forensics and data recovery,       categories: [forensics]}
+  blue-team:           {description: Defensive monitoring and auditing,         categories: [blue-team]}
+  soc:                 {description: Security operations and detection,         categories: [soc]}
+  wireless:            {description: Wireless assessment (authorized only),     categories: [wireless]}
+  reverse-engineering: {description: Binary analysis and debugging,             categories: [reverse-engineering]}
+  malware-analysis:    {description: Malware analysis for controlled labs,      categories: [malware-analysis]}
+  cloud:               {description: Cloud security assessment,                 categories: [cloud]}
+  containers:          {description: Container and Kubernetes security,         categories: [containers]}
+  development:         {description: "Compilers, runtimes and build tools",     categories: [development]}
+
+tools:
+  # ---- network ----
+  - {name: nmap,        category: network, tier: core,     installation_method: apt, package: nmap,              description: "Network discovery and security auditing"}
+  - {name: masscan,     category: network, tier: optional, installation_method: apt, package: masscan,           description: "High-speed TCP port scanner"}
+  - {name: rustscan,    category: network, tier: external, installation_method: external,                         description: "Fast port scanner"}
+  - {name: naabu,       category: network, tier: external, installation_method: external,                         description: "Port scanning tool"}
+  - {name: netcat,      category: network, tier: core,     installation_method: apt, package: netcat-openbsd,    description: "TCP/UDP networking utility"}
+  - {name: socat,       category: network, tier: core,     installation_method: apt, package: socat,             description: "Multipurpose data relay"}
+  - {name: wireshark,   category: network, tier: optional, installation_method: apt, package: wireshark,         description: "Graphical network protocol analyzer"}
+  - {name: tshark,      category: network, tier: core,     installation_method: apt, package: tshark,            description: "Command-line network protocol analyzer"}
+  - {name: tcpdump,     category: network, tier: core,     installation_method: apt, package: tcpdump,           description: "Command-line packet capture"}
+  - {name: ettercap,    category: network, tier: optional, installation_method: apt, package: ettercap-text-only, description: "Network sniffing and traffic analysis suite"}
+  - {name: bettercap,   category: network, tier: optional, installation_method: apt, package: bettercap,          description: "Network reconnaissance and monitoring framework"}
+  - {name: scapy,       category: network, tier: optional, installation_method: apt, package: python3-scapy,      description: "Python packet manipulation library"}
+  - {name: hping3,      category: network, tier: optional, installation_method: apt, package: hping3,             description: "TCP/IP packet assembler and analyzer"}
+  - {name: traceroute,  category: network, tier: core,     installation_method: apt, package: traceroute,         description: "Trace network path to a host"}
+  - {name: iproute2,    category: network, tier: core,     installation_method: apt, package: iproute2,           description: "Linux network configuration utilities (ip, ss)"}
+  - {name: arp-scan,    category: network, tier: optional, installation_method: apt, package: arp-scan,           description: "ARP-based local network scanner"}
+  - {name: netdiscover, category: network, tier: optional, installation_method: apt, package: netdiscover,        description: "ARP network address discovery"}
+  # ---- dns ----
+  - {name: dig,         category: dns, tier: core,     installation_method: apt, package: bind9-dnsutils, description: "DNS lookup utility"}
+  - {name: nslookup,    category: dns, tier: core,     installation_method: apt, package: bind9-dnsutils, description: "Interactive DNS query tool"}
+  - {name: whois,       category: dns, tier: core,     installation_method: apt, package: whois,          description: "Domain registration lookup client"}
+  - {name: dnsenum,     category: dns, tier: optional, installation_method: apt, package: dnsenum,        description: "DNS enumeration tool"}
+  - {name: dnsrecon,    category: dns, tier: optional, installation_method: apt, package: dnsrecon,       description: "DNS reconnaissance tool"}
+  - {name: fierce,      category: dns, tier: optional, installation_method: apt, package: fierce,         description: "DNS reconnaissance scanner"}
+  - {name: amass,       category: dns, tier: optional, installation_method: apt, package: amass,          description: "Attack surface mapping and asset discovery"}
+  - {name: subfinder,   category: dns, tier: external, installation_method: external,                      description: "Passive subdomain discovery"}
+  - {name: assetfinder, category: dns, tier: external, installation_method: external,                      description: "Find related domains and subdomains"}
+  - {name: httpx,       category: dns, tier: external, installation_method: external,                      description: "HTTP probing toolkit (ProjectDiscovery httpx; not the Python library)"}
+  # ---- web ----
+  - {name: zap,         category: web, tier: external, installation_method: external,                      description: "OWASP ZAP web application scanner"}
+  - {name: burpsuite,   category: web, tier: external, installation_method: external,                      description: "Web security testing platform (proprietary; never bundled)"}
+  - {name: ffuf,        category: web, tier: optional, installation_method: apt, package: ffuf,           description: "Fast web fuzzer"}
+  - {name: gobuster,    category: web, tier: optional, installation_method: apt, package: gobuster,       description: "Directory, DNS and vhost brute-forcing"}
+  - {name: feroxbuster, category: web, tier: optional, installation_method: apt, package: feroxbuster,    description: "Recursive content discovery"}
+  - {name: nikto,       category: web, tier: optional, installation_method: apt, package: nikto,          description: "Web server scanner"}
+  - {name: wfuzz,       category: web, tier: optional, installation_method: apt, package: wfuzz,          description: "Web application fuzzer"}
+  - {name: whatweb,     category: web, tier: optional, installation_method: apt, package: whatweb,        description: "Web technology fingerprinting"}
+  - {name: nuclei,      category: web, tier: external, installation_method: external,                      description: "Template-based vulnerability scanner"}
+  - {name: sqlmap,      category: web, tier: optional, installation_method: apt, package: sqlmap,         description: "SQL injection detection and exploitation tool"}
+  - {name: dirsearch,   category: web, tier: optional, installation_method: apt, package: dirsearch,      description: "Web path discovery"}
+  - {name: commix,      category: web, tier: optional, installation_method: apt, package: commix,         description: "Command injection testing tool"}
+  # ---- osint ----
+  - {name: theharvester, category: osint, tier: optional, installation_method: apt, package: theharvester, description: "Email, subdomain and name gathering"}
+  - {name: spiderfoot,  category: osint, tier: external, installation_method: external,                    description: "OSINT automation platform"}
+  - {name: recon-ng,    category: osint, tier: optional, installation_method: apt, package: recon-ng,      description: "Web reconnaissance framework"}
+  - {name: sherlock,    category: osint, tier: optional, installation_method: apt, package: sherlock,      description: "Username search across social networks"}
+  - {name: holehe,      category: osint, tier: external, installation_method: pipx,                         description: "Check where an email is registered"}
+  - {name: photon,      category: osint, tier: external, installation_method: external,                    description: "Fast web crawler for OSINT"}
+  - {name: exiftool,    category: osint, also: [forensics], tier: core, installation_method: apt, package: libimage-exiftool-perl, description: "Read and write file metadata"}
+  - {name: metagoofil,  category: osint, tier: optional, installation_method: apt, package: metagoofil,    description: "Public document metadata extraction"}
+  - {name: maltego,     category: osint, tier: external, installation_method: external,                    description: "Link analysis platform (proprietary; never bundled)"}
+  # ---- forensics ----
+  - {name: autopsy,     category: forensics, tier: optional, installation_method: apt, package: autopsy,       description: "Digital forensics platform GUI"}
+  - {name: sleuthkit,   category: forensics, tier: core,     installation_method: apt, package: sleuthkit,     description: "Disk image forensic analysis toolkit"}
+  - {name: volatility3, category: forensics, tier: optional, installation_method: apt, package: volatility3,   description: "Memory forensics framework"}
+  - {name: binwalk,     category: forensics, also: [reverse-engineering], tier: optional, installation_method: apt, package: binwalk, description: "Firmware analysis and extraction"}
+  - {name: foremost,    category: forensics, tier: optional, installation_method: apt, package: foremost,      description: "File carving recovery tool"}
+  - {name: scalpel,     category: forensics, tier: optional, installation_method: apt, package: scalpel,       description: "File carving recovery tool"}
+  - {name: testdisk,    category: forensics, tier: core,     installation_method: apt, package: testdisk,      description: "Partition and data recovery"}
+  - {name: photorec,    category: forensics, tier: core,     installation_method: apt, package: testdisk,      description: "File recovery tool (shipped with TestDisk)"}
+  - {name: dd,          category: forensics, tier: core,     installation_method: apt, package: coreutils,     description: "Low-level data copy utility"}
+  - {name: strings,     category: forensics, also: [reverse-engineering], tier: core, installation_method: apt, package: binutils, description: "Extract printable strings from files"}
+  # ---- blue-team / soc ----
+  - {name: suricata,    category: blue-team, also: [soc], tier: optional, installation_method: apt, package: suricata, description: "Network IDS/IPS and monitoring engine"}
+  - {name: zeek,        category: soc, also: [blue-team], tier: optional, installation_method: apt, package: zeek,     description: "Network security monitor"}
+  - {name: yara,        category: malware-analysis, also: [blue-team, soc], tier: core, installation_method: apt, package: yara, description: "Pattern matching for malware identification"}
+  - {name: clamav,      category: blue-team, also: [malware-analysis], tier: optional, installation_method: apt, package: clamav, description: "Open-source antivirus engine"}
+  - {name: auditd,      category: blue-team, tier: core,     installation_method: apt, package: auditd,         description: "Linux audit daemon"}
+  - {name: osquery,     category: soc, tier: external, installation_method: external,                           description: "SQL-based endpoint instrumentation"}
+  - {name: falco,       category: soc, also: [containers], tier: external, installation_method: external,         description: "Runtime security monitoring"}
+  - {name: lynis,       category: blue-team, tier: core,     installation_method: apt, package: lynis,           description: "Security auditing tool for Unix systems"}
+  - {name: openscap,    category: blue-team, tier: optional, installation_method: apt, package: openscap-scanner, description: "SCAP compliance scanner"}
+  - {name: wazuh,       category: soc, tier: specialized, installation_method: external,                          description: "Security monitoring platform (components only where appropriate)"}
+  # ---- reverse engineering / malware ----
+  - {name: gdb,         category: reverse-engineering, also: [development], tier: core, installation_method: apt, package: gdb, description: "GNU debugger"}
+  - {name: ghidra,      category: reverse-engineering, also: [malware-analysis], tier: optional, installation_method: apt, package: ghidra, description: "Software reverse engineering suite"}
+  - {name: radare2,     category: reverse-engineering, tier: optional, installation_method: apt, package: radare2,  description: "Reverse engineering framework"}
+  - {name: cutter,      category: reverse-engineering, tier: optional, installation_method: apt, package: cutter-re, description: "Reverse engineering GUI for radare2/rizin"}
+  - {name: objdump,     category: reverse-engineering, tier: core,     installation_method: apt, package: binutils, description: "Display object file information"}
+  - {name: readelf,     category: reverse-engineering, tier: core,     installation_method: apt, package: binutils, description: "Display ELF file information"}
+  - {name: binutils,    category: reverse-engineering, tier: core,     installation_method: apt, package: binutils, description: "GNU binary utilities"}
+  - {name: strace,      category: reverse-engineering, also: [malware-analysis, system-administration], tier: core, installation_method: apt, package: strace, description: "Trace system calls"}
+  - {name: ltrace,      category: reverse-engineering, also: [malware-analysis], tier: core, installation_method: apt, package: ltrace, description: "Trace library calls"}
+  - {name: checksec,    category: reverse-engineering, tier: optional, installation_method: apt, package: checksec,  description: "Check binary hardening properties"}
+  - {name: capa,        category: malware-analysis, tier: external, installation_method: external,                  description: "Identify capabilities in executable files"}
+  - {name: floss,       category: malware-analysis, tier: external, installation_method: external,                  description: "Extract obfuscated strings from malware"}
+  # ---- wireless ----
+  - {name: aircrack-ng, category: wireless, tier: optional, installation_method: apt, package: aircrack-ng,      description: "Wireless network auditing suite"}
+  - {name: kismet,      category: wireless, tier: optional, installation_method: apt, package: kismet,           description: "Wireless network detector and sniffer"}
+  - {name: iw,          category: wireless, tier: core,     installation_method: apt, package: iw,               description: "Wireless device configuration"}
+  - {name: wireless-tools, category: wireless, tier: optional, installation_method: apt, package: wireless-tools, description: "Legacy wireless extensions tools"}
+  - {name: hcxtools,    category: wireless, tier: optional, installation_method: apt, package: hcxtools,         description: "WPA capture conversion utilities"}
+  - {name: macchanger,  category: wireless, tier: optional, installation_method: apt, package: macchanger,       description: "MAC address manipulation utility"}
+  # ---- password auditing ----
+  - {name: john,        category: password-auditing, tier: optional, installation_method: apt, package: john,     description: "John the Ripper password auditing"}
+  - {name: hashcat,     category: password-auditing, tier: optional, installation_method: apt, package: hashcat,  description: "Advanced password recovery"}
+  - {name: hydra,       category: password-auditing, tier: optional, installation_method: apt, package: hydra,    description: "Network login auditing tool"}
+  - {name: medusa,      category: password-auditing, tier: optional, installation_method: apt, package: medusa,   description: "Parallel network login auditing"}
+  - {name: cewl,        category: password-auditing, tier: optional, installation_method: apt, package: cewl,     description: "Custom wordlist generator from web content"}
+  - {name: crunch,      category: password-auditing, tier: optional, installation_method: apt, package: crunch,   description: "Wordlist generator"}
+  - {name: seclists,    category: password-auditing, tier: optional, installation_method: apt, package: seclists, description: "Security tester wordlist collection"}
+  # ---- active directory ----
+  - {name: impacket,    category: active-directory, tier: optional, installation_method: apt, package: python3-impacket, description: "Python network protocol toolkit"}
+  - {name: bloodhound,  category: active-directory, tier: external, installation_method: external,                description: "Active Directory attack path analysis"}
+  - {name: netexec,     category: active-directory, tier: external, installation_method: pipx,                    description: "Network service assessment tool"}
+  - {name: evil-winrm,  category: active-directory, tier: external, installation_method: external,                description: "WinRM shell for authorized testing"}
+  - {name: ldapsearch,  category: active-directory, tier: optional, installation_method: apt, package: ldap-utils, description: "LDAP directory query client"}
+  - {name: kerbrute,    category: active-directory, tier: external, installation_method: external,                description: "Kerberos pre-authentication testing"}
+  # ---- cloud ----
+  - {name: trivy,       category: cloud, also: [containers], tier: external, installation_method: external,       description: "Vulnerability and misconfiguration scanner"}
+  - {name: prowler,     category: cloud, tier: external, installation_method: pipx,                              description: "Cloud security posture assessment"}
+  - {name: scoutsuite,  category: cloud, tier: external, installation_method: pipx,                              description: "Multi-cloud security auditing"}
+  - {name: kube-bench,  category: cloud, also: [containers], tier: containerized, installation_method: container, description: "Kubernetes CIS benchmark checks"}
+  - {name: kube-hunter, category: cloud, also: [containers], tier: containerized, installation_method: container, description: "Kubernetes security weakness hunting"}
+  # ---- containers ----
+  - {name: docker,      category: containers, also: [development], tier: optional, installation_method: apt, package: docker.io, description: "Container engine"}
+  - {name: grype,       category: containers, tier: external, installation_method: external,                      description: "Container image vulnerability scanner"}
+  - {name: syft,        category: containers, tier: external, installation_method: external,                      description: "SBOM generator"}
+  - {name: dive,        category: containers, tier: external, installation_method: external,                      description: "Explore container image layers"}
+  - {name: hadolint,    category: containers, tier: external, installation_method: external,                      description: "Dockerfile linter"}
+  # ---- privacy / cryptography ----
+  - {name: gnupg,       category: cryptography, tier: core,     installation_method: apt, package: gnupg,        description: "OpenPGP encryption and signing"}
+  - {name: openssl,     category: cryptography, tier: core,     installation_method: apt, package: openssl,      description: "TLS toolkit and cryptography CLI"}
+  - {name: age,         category: cryptography, tier: optional, installation_method: apt, package: age,          description: "Simple file encryption tool"}
+  - {name: tor,         category: privacy,      tier: optional, installation_method: apt, package: tor,          description: "Anonymity network client"}
+  - {name: proxychains, category: privacy,      tier: optional, installation_method: apt, package: proxychains4, description: "Route connections through proxies"}
+  - {name: hashdeep,    category: cryptography, tier: optional, installation_method: apt, package: hashdeep,     description: "Recursive hashing and audit"}
+  - {name: sha256sum,   category: cryptography, tier: core,     installation_method: apt, package: coreutils,    description: "Compute SHA-256 checksums"}
+  # ---- system administration ----
+  - {name: htop,        category: system-administration, tier: core, installation_method: apt, package: htop,     description: "Interactive process viewer"}
+  - {name: btop,        category: system-administration, tier: core, installation_method: apt, package: btop,     description: "Resource monitor"}
+  - {name: lsof,        category: system-administration, tier: core, installation_method: apt, package: lsof,     description: "List open files"}
+  - {name: tmux,        category: system-administration, tier: core, installation_method: apt, package: tmux,     description: "Terminal multiplexer"}
+  - {name: screen,      category: system-administration, tier: core, installation_method: apt, package: screen,   description: "Terminal multiplexer"}
+  - {name: rsync,       category: system-administration, tier: core, installation_method: apt, package: rsync,    description: "File synchronization"}
+  - {name: curl,        category: system-administration, tier: core, installation_method: apt, package: curl,     description: "URL transfer tool"}
+  - {name: wget,        category: system-administration, tier: core, installation_method: apt, package: wget,     description: "File downloader"}
+  - {name: git,         category: system-administration, also: [development], tier: core, installation_method: apt, package: git, description: "Distributed version control"}
+  - {name: systemctl,   category: system-administration, tier: core, installation_method: apt, package: systemd,  description: "Control the systemd service manager"}
+  - {name: journalctl,  category: system-administration, tier: core, installation_method: apt, package: systemd,  description: "Query the systemd journal"}
+  # ---- development ----
+  - {name: python3,     category: development, tier: development, installation_method: apt, package: python3,    description: "Python interpreter"}
+  - {name: gcc,         category: development, tier: development, installation_method: apt, package: gcc,        description: "GNU C compiler"}
+  - {name: g++,         category: development, tier: development, installation_method: apt, package: g++,        description: "GNU C++ compiler"}
+  - {name: nodejs,      category: development, tier: development, installation_method: apt, package: nodejs,     description: "JavaScript runtime"}
+  - {name: npm,         category: development, tier: development, installation_method: apt, package: npm,        description: "Node.js package manager"}
+  - {name: rustc,       category: development, tier: development, installation_method: apt, package: rustc,      description: "Rust compiler"}
+  - {name: cargo,       category: development, tier: development, installation_method: apt, package: cargo,      description: "Rust package manager"}
+  - {name: go,          category: development, tier: development, installation_method: apt, package: golang-go,  description: "Go toolchain"}
+  - {name: java,        category: development, tier: development, installation_method: apt, package: default-jdk, description: "Java development kit"}
+  - {name: make,        category: development, tier: development, installation_method: apt, package: make,        description: "Build automation"}
+  - {name: cmake,       category: development, tier: development, installation_method: apt, package: cmake,       description: "Cross-platform build system generator"}

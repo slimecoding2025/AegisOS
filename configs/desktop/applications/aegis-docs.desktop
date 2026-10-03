@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=AegisOS Documentation
+Comment=Open the AegisOS documentation
+Exec=xdg-open /usr/share/doc/aegis-branding
+Icon=help-browser
+Terminal=false
+Categories=System;Documentation;

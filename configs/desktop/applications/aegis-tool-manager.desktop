@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Aegis Tool Manager
+Comment=Browse and install security tools
+Exec=xfce4-terminal --title "Aegis Tool Manager" --hold -e "aegis profile"
+Icon=system-software-install
+Terminal=false
+Categories=System;Security;
