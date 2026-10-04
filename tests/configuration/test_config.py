@@ -118,3 +118,24 @@ class Config(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class Website(unittest.TestCase):
+    def test_website_files(self):
+        import json
+        html = (ROOT / "website/index.html").read_text()
+        self.assertIn("<title>AegisOS", html)
+        self.assertIn("https://github.com/slimecoding2025/AegisOS/releases", html)
+        self.assertNotRegex(html, r"<script[^>]+src=")           # no third-party scripts
+        self.assertNotIn("cdn.", html)
+        json.loads((ROOT / "website/vercel.json").read_text())
+
+    def test_release_workflow_guards(self):
+        wf = (ROOT / ".github/workflows/release.yml").read_text()
+        self.assertIn("2147483648", wf)
+        self.assertIn("--prerelease", wf)
+        self.assertIn("vars.AEGIS_PUBLISH_RELEASES == 'true'", wf)
+
+    def test_image_home_url_is_the_real_repository(self):
+        hook = (ROOT / "build/config/hooks/live/0100-aegis-os-release.hook.chroot").read_text()
+        self.assertIn("github.com/slimecoding2025/AegisOS", hook)

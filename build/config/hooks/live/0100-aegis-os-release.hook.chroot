@@ -10,6 +10,6 @@ VERSION_ID="${VERSION}"
 VERSION="${VERSION}"
 ID=aegisos
 ID_LIKE=debian
-HOME_URL="https://github.com/aegisos/aegisos"
+HOME_URL="https://github.com/slimecoding2025/AegisOS"
 EOT
 ln -sf ../usr/lib/os-release /etc/os-release

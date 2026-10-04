@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%9B%A1%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<title>AegisOS - Defend. Analyze. Understand.</title>
+<meta name="description" content="AegisOS is an open-source Debian 13 based Linux distribution for defensive security, digital forensics, network analysis, reverse engineering and security education.">
+<style>
+:root{--bg:#070b12;--bg2:#0d1522;--fg:#e8eef6;--mut:#92a3b8;--ac:#4fa3d1;--ac2:#8b7cff;--card:rgba(120,170,220,.06);--bd:rgba(120,170,220,.16);--ok:#46c28a;--warn:#f0b64c;--bad:#ef6b6b;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f4f7fb;--bg2:#e6edf6;--fg:#0f1826;--mut:#4b5d73;--ac:#1f78a8;--ac2:#5b4bd6;--card:rgba(20,60,110,.05);--bd:rgba(20,60,110,.16);--ok:#1c8a5a;--warn:#9a6a00;--bad:#b83a3a}}
+:root[data-theme="light"]{--bg:#f4f7fb;--bg2:#e6edf6;--fg:#0f1826;--mut:#4b5d73;--ac:#1f78a8;--ac2:#5b4bd6;--card:rgba(20,60,110,.05);--bd:rgba(20,60,110,.16);--ok:#1c8a5a;--warn:#9a6a00;--bad:#b83a3a}
+:root[data-theme="dark"]{--bg:#070b12;--bg2:#0d1522;--fg:#e8eef6;--mut:#92a3b8;--ac:#4fa3d1;--ac2:#8b7cff;--card:rgba(120,170,220,.06);--bd:rgba(120,170,220,.16);--ok:#46c28a;--warn:#f0b64c;--bad:#ef6b6b}
+html{scroll-behavior:smooth;scroll-padding-top:calc(72px + env(safe-area-inset-top,0px))}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 "Segoe UI Variable","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;overflow-x:hidden}
+canvas#net{position:fixed;inset:0;width:100%;height:100%;z-index:0;opacity:.55;pointer-events:none}
+a{color:var(--ac)}a:focus-visible,button:focus-visible{outline:3px solid var(--ac2);outline-offset:3px;border-radius:6px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;align-items:center;gap:20px;padding:12px max(20px,4vw);background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--bd)}
+header b{font-size:19px;letter-spacing:.02em;margin-right:auto;display:flex;align-items:center;gap:10px}
+nav{display:flex;gap:18px;flex-wrap:wrap}nav a{color:var(--mut);text-decoration:none;font-size:14px}nav a:hover{color:var(--fg)}
+#th{background:var(--card);color:var(--fg);border:1px solid var(--bd);border-radius:10px;padding:6px 12px;cursor:pointer;font:inherit;font-size:13px}
+main{position:relative;z-index:1}
+.w{max-width:1080px;margin:0 auto;padding:0 max(20px,4vw)}
+.hero{min-height:calc(100vh - 70px);display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:30px;padding-top:40px;padding-bottom:40px}
+h1{font-size:clamp(40px,7vw,84px);line-height:1.02;margin:0 0 22px;letter-spacing:-.035em;font-weight:800}
+h1 span{display:block;background:linear-gradient(100deg,var(--fg) 10%,var(--ac) 55%,var(--ac2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{font-size:19px;color:var(--mut);max-width:34em;margin:0 0 28px}
+.btn{display:inline-block;padding:13px 24px;border-radius:12px;font-weight:650;text-decoration:none;margin:0 10px 10px 0;border:1px solid var(--bd)}
+.btn.p{background:linear-gradient(120deg,var(--ac),var(--ac2));color:#06101c;border:0;box-shadow:0 10px 40px -10px var(--ac)}
+.btn.s{color:var(--fg);background:var(--card)}
+.stage{perspective:1000px;height:440px;display:grid;place-items:center}
+.shield{position:relative;width:240px;height:290px;transform-style:preserve-3d;transform:rotateX(var(--rx,8deg)) rotateY(var(--ry,-18deg));transition:transform .25s ease-out}
+.shield svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;animation:fly 1.5s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i)*.14s)}
+.shield svg path{fill:rgba(79,163,209,.06);stroke:var(--ac);stroke-width:3;stroke-linejoin:round;filter:drop-shadow(0 0 10px var(--ac))}
+.shield svg:nth-child(odd) path{stroke:var(--ac2);filter:drop-shadow(0 0 10px var(--ac2))}
+.shield .core{position:absolute;inset:0;display:grid;place-items:center;transform:translateZ(90px);font-weight:800;font-size:56px;color:var(--fg);text-shadow:0 0 30px var(--ac);animation:fly 1.5s .9s cubic-bezier(.2,.8,.2,1) both}
+@keyframes fly{from{opacity:0;transform:translateZ(calc(var(--z,0px) + 500px)) rotateZ(14deg)}to{opacity:1;transform:translateZ(var(--z,0px))}}
+section{padding:84px 0 0}
+h2{font-size:clamp(28px,4vw,42px);letter-spacing:-.02em;margin:0 0 14px;line-height:1.15}
+p{margin:0 0 14px;max-width:46em}.mut{color:var(--mut)}
+.facts{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+.facts div{border-left:3px solid var(--ac);padding:2px 14px;min-width:150px}.facts b{display:block;font-size:26px}
+.rows{border-top:1px solid var(--bd);margin-top:22px}
+.row{display:grid;grid-template-columns:240px 1fr;gap:20px;padding:18px 0;border-bottom:1px solid var(--bd)}
+.row h3{margin:0;font-size:17px}.row p{margin:0;color:var(--mut)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 20px}
+.chip{border:1px solid var(--bd);background:var(--card);border-radius:999px;padding:5px 13px;font-size:14px}
+.term{background:#05080e;color:#d6e2f0;border:1px solid var(--bd);border-radius:14px;padding:18px 20px;font:14px/1.7 ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;overflow-x:auto;box-shadow:0 30px 80px -40px var(--ac)}
+.term i{font-style:normal;color:#6fc3ff}.term u{text-decoration:none;color:#46c28a}.term s{text-decoration:none;color:#f0b64c}
+.term div{white-space:pre;opacity:0;animation:ty .01s forwards;animation-delay:calc(var(--d)*.35s + 1s)}
+@keyframes ty{to{opacity:1}}
+.tbl{width:100%;border-collapse:collapse;margin-top:16px}.tbl td{padding:11px 10px;border-bottom:1px solid var(--bd);vertical-align:top}.tbl td:first-child{width:130px}
+.tag{display:inline-block;padding:2px 11px;border-radius:999px;font-size:13px;font-weight:650;border:1px solid currentColor}
+.ok{color:var(--ok)}.wn{color:var(--warn)}.bd{color:var(--bad)}
+.road{border-left:2px solid var(--bd);margin:20px 0 0 8px;padding-left:24px}.road div{position:relative;padding-bottom:22px}
+.road div:before{content:"";position:absolute;left:-32px;top:7px;width:14px;height:14px;border-radius:50%;background:var(--bg);border:3px solid var(--ac)}
+.road div.now:before{background:var(--ac);box-shadow:0 0 14px var(--ac)}
+.road b{display:block}
+pre{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;overflow-x:auto;font:14px/1.6 ui-monospace,Menlo,Consolas,monospace;margin:10px 0 16px}
+.card{border:1px solid var(--bd);background:var(--card);border-radius:16px;padding:22px 24px;margin:16px 0}
+.notice{border-left:4px solid var(--warn);background:var(--card);padding:16px 20px;border-radius:0 12px 12px 0}
+footer{position:relative;z-index:1;margin-top:90px;border-top:1px solid var(--bd);padding:30px max(20px,4vw);color:var(--mut);font-size:14px;text-align:center}
+@media (max-width:820px){.hero{grid-template-columns:1fr;min-height:0}.stage{height:340px}.row{grid-template-columns:1fr;gap:6px}nav{display:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}.term div{opacity:1}}
+</style>
+</head>
+<body>
+<canvas id="net" aria-hidden="true"></canvas>
+<header>
+<b><svg width="26" height="30" viewBox="0 0 200 240" aria-hidden="true"><path d="M100 12 L180 44 V112 C180 162 148 204 100 228 C52 204 20 162 20 112 V44 Z" fill="none" stroke="currentColor" stroke-width="16" style="color:var(--ac)"/></svg>AegisOS</b>
+<nav><a href="#about">About</a><a href="#features">Features</a><a href="#tools">Tools</a><a href="#status">Status</a><a href="#download">Download</a><a href="#contact">Contact</a></nav>
+<button id="th" type="button" aria-label="Switch color theme">Theme</button>
+</header>
+<main>
+<div class="w hero">
+<div>
+<h1>Defend.<span>Analyze.</span>Understand.</h1>
+<p class="lead">An open-source Linux distribution on Debian 13 for defenders, analysts, researchers and students. Real tools, honest status, no fake claims.</p>
+<a class="btn p" href="#download">Download AegisOS</a><a class="btn s" href="https://github.com/slimecoding2025/AegisOS">View the source on GitHub</a>
+<p class="mut" style="font-size:14px">Pre-alpha 0.1.0. Built by GitHub Actions and booted in VMware Workstation 17 Pro with UEFI.</p>
+</div>
+<div class="stage" aria-hidden="true"><div class="shield" id="sh">
+<svg viewBox="0 0 200 240" style="--i:0;--z:-90px"><path d="M100 12 L180 44 V112 C180 162 148 204 100 228 C52 204 20 162 20 112 V44 Z"/></svg>
+<svg viewBox="0 0 200 240" style="--i:1;--z:-45px"><path d="M100 12 L180 44 V112 C180 162 148 204 100 228 C52 204 20 162 20 112 V44 Z"/></svg>
+<svg viewBox="0 0 200 240" style="--i:2;--z:0px"><path d="M100 12 L180 44 V112 C180 162 148 204 100 228 C52 204 20 162 20 112 V44 Z"/></svg>
+<svg viewBox="0 0 200 240" style="--i:3;--z:45px"><path d="M100 12 L180 44 V112 C180 162 148 204 100 228 C52 204 20 162 20 112 V44 Z"/></svg>
+<svg viewBox="0 0 200 240" style="--i:4;--z:90px"><path d="M100 12 L180 44 V112 C180 162 148 204 100 228 C52 204 20 162 20 112 V44 Z"/></svg>
+<div class="core">A</div></div></div>
+</div>
+
+<div class="w"><section id="about">
+<h2>What AegisOS is</h2>
+<p>AegisOS is an independent Linux distribution for cybersecurity work: defensive monitoring, digital forensics, network analysis, reverse engineering and security education. It is a real, installable project, not a themed desktop.</p>
+<p>It reuses mature technology instead of reinventing it: Debian packages, <code>apt</code>, <code>live-build</code> and XFCE. Its own parts are a tool manager, diagnostics, reversible hardening and a local dashboard.</p>
+<div class="facts"><div><b>Debian 13</b>base: "trixie", current stable</div><div><b>138</b>tools in the manifest</div><div><b>12</b>install profiles</div><div><b>Apache-2.0</b>project license</div></div>
+</section></div>
+
+<div class="w"><section id="features">
+<h2>What you get</h2>
+<div class="rows">
+<div class="row"><h3>Bootable live ISO</h3><p>A hybrid amd64 image that boots under UEFI into a live XFCE desktop with the Aegis welcome guide. BIOS boot is not supported.</p></div>
+<div class="row"><h3>The aegis tool manager</h3><p>Search, inspect, install and remove tools by name or by profile. It calls apt, it never replaces it, and it refuses packages that have no candidate.</p></div>
+<div class="row"><h3>A manifest as the single source of truth</h3><p>One file lists every tool with category, tier, install method and verification status. Profiles, docs and the ISO package list are generated from it.</p></div>
+<div class="row"><h3>aegis doctor</h3><p>Thirteen health checks (OS, kernel, apt, repositories, DNS, connectivity, disk, time, dependencies, manifest, broken packages) with exit codes 0, 1 and 2.</p></div>
+<div class="row"><h3>Reversible hardening</h3><p>Optional sysctl hardening in one drop-in file. Apply, audit and revert were run on a booted image: revert restored the previous settings.</p></div>
+<div class="row"><h3>Security Center</h3><p>A read-only dashboard of real system data: kernel, memory, disks, interfaces, firewall, updates, services and listening ports. It binds to 127.0.0.1 only.</p></div>
+<div class="row"><h3>aegis-net</h3><p>Interfaces, routes, DNS, connections and listening sockets, read straight from the kernel.</p></div>
+<div class="row"><h3>Tested in the open</h3><p>CI runs ShellCheck, pytest, manifest validation, package builds and a Debian 13 package-name check on every push.</p></div>
+</div>
+</section></div>
+
+<div class="w"><section id="tools">
+<h2>The tool ecosystem</h2>
+<p>Tools are grouped into 18 categories and installed through 12 profiles. Where a tool is not in Debian 13, it is listed as an external install instead of guessing a package name.</p>
+<div class="chips"><span class="chip">network</span><span class="chip">web</span><span class="chip">osint</span><span class="chip">forensics</span><span class="chip">blue-team</span><span class="chip">soc</span><span class="chip">wireless</span><span class="chip">reverse-engineering</span><span class="chip">malware-analysis</span><span class="chip">cloud</span><span class="chip">containers</span><span class="chip">development</span></div>
+<p class="mut">On Debian 13.7, 95 apt package names resolved and 13 did not (for example ghidra, zeek, radare2 and nikto); those 13 are marked external. Resolving a name does not prove the tool was installed and tested. License and homepage fields stay "unverified" until checked against an official source.</p>
+<div class="term" role="img" aria-label="Real command output from an AegisOS live image"><div style="--d:0"><i>$</i> aegis version</div><div style="--d:1">aegis 0.1.0</div><div style="--d:2"><i>$</i> aegis doctor</div><div style="--d:3"><u>PASS</u>  os                 AegisOS 0.1.0</div><div style="--d:4"><u>PASS</u>  kernel             6.12.111+deb13-amd64 (x86_64)</div><div style="--d:5"><u>PASS</u>  manifest           138 tools valid</div><div style="--d:6"><s>WARN</s>  time-sync          NTPSynchronized=no</div><div style="--d:7">11 PASS, 2 WARN, 0 FAIL</div></div>
+<p class="mut" style="font-size:14px;margin-top:10px">Excerpt of real output from an AegisOS 0.1.0 live session in VMware, 2026-10-04.</p>
+</section></div>
+
+<div class="w"><section id="status">
+<h2>Honest status</h2>
+<p>AegisOS reports what was actually tested. Anything else says so.</p>
+<table class="tbl">
+<tr><td><span class="tag ok">Verified</span></td><td>ISO built by GitHub Actions. Live boot with UEFI in VMware Workstation 17 Pro. AegisOS identification, wallpaper and welcome guide. <code>aegis doctor</code>, <code>aegis-net</code>, Security Center and hardening apply and revert on a booted image. CI green.</td></tr>
+<tr><td><span class="tag wn">Not verified</span></td><td>Installing to disk with the Debian Installer. VirtualBox. Secure Boot. Installing and running each tool.</td></tr>
+<tr><td><span class="tag bd">Known issue</span></td><td>The VMware display does not resize automatically with the window (cause not yet found). The boot menu still shows Debian branding.</td></tr>
+</table>
+<h3 style="margin-top:34px">Roadmap</h3>
+<div class="road">
+<div class="now"><b>0.1 pre-alpha, now</b><span class="mut">Bootable live ISO, aegis CLI, manifest, diagnostics, hardening, CI.</span></div>
+<div><b>0.2</b><span class="mut">Verified license and homepage metadata, tool launchers in the desktop menu, a tested installer.</span></div>
+<div><b>0.3</b><span class="mut">Better VM compatibility, VirtualBox documentation, expanded tools.</span></div>
+<div><b>1.0</b><span class="mut">Stable ISO, reproducible build, complete verified documentation and GitHub Releases.</span></div>
+</div>
+</section></div>
+
+<div class="w"><section id="download">
+<h2>Download</h2>
+<p>Every version will be published as a GitHub Release with the ISO and a <code>SHA256SUMS</code> file. Releases are listed below when they exist.</p>
+<div class="card" id="rel"><b>Checking GitHub Releases</b><p class="mut" style="margin:6px 0 0">If this stays empty, no public release has been published yet. ISO builds currently exist only as CI artifacts for the maintainers.</p></div>
+<a class="btn p" id="relbtn" href="https://github.com/slimecoding2025/AegisOS/releases">Open all releases on GitHub</a><a class="btn s" href="https://github.com/slimecoding2025/AegisOS">Build it yourself from source</a>
+<h3>Verify your download</h3>
+<p>Compare the checksum with the value in <code>SHA256SUMS</code>. On Windows:</p>
+<pre>Get-FileHash .\AegisOS-0.1.0-amd64.iso -Algorithm SHA256</pre>
+<p>On Linux, in the folder with both files:</p>
+<pre>sha256sum -c SHA256SUMS</pre>
+<h3>Run it</h3>
+<p>Create a virtual machine with <strong>UEFI firmware</strong>, 2 or more CPUs, 8 GB RAM for the live session, and attach the ISO. Choose "Live system" in the boot menu.</p>
+</section></div>
+
+<div class="w"><section>
+<div class="notice"><b>Authorized use only.</b> Offensive-security tools are packaged for authorized testing and education. Use them only on systems you own or have written permission to test. AegisOS ships no malware, credential theft, persistence or automated attacks against third parties.</div>
+</section></div>
+
+<div class="w"><section id="contact">
+<h2>Contact</h2>
+<p>AegisOS is run in the open on GitHub. That is the official place to reach the maintainers.</p>
+<div class="rows">
+<div class="row"><h3>Bugs and questions</h3><p><a href="https://github.com/slimecoding2025/AegisOS/issues">Open an issue</a> and include the output of <code>aegis version</code> and <code>aegis doctor</code>.</p></div>
+<div class="row"><h3>Security reports</h3><p>Use GitHub's private vulnerability reporting on the repository's Security tab. Please do not post vulnerabilities in public issues.</p></div>
+<div class="row"><h3>Contributing</h3><p>Read CONTRIBUTING.md in the repository. New tools need verified license and homepage data, or the value stays "unverified".</p></div>
+<div class="row"><h3>License</h3><p>Project code is Apache-2.0. Third-party tools keep their own licenses.</p></div>
+</div>
+</section></div>
+</main>
+<footer>AegisOS. Defend. Analyze. Understand. Open source under Apache-2.0.</footer>
+<script>
+(function(){
+var d=document,r=d.documentElement,rm=matchMedia("(prefers-reduced-motion:reduce)").matches;
+d.getElementById("th").onclick=function(){var dark=(r.dataset.theme||(matchMedia("(prefers-color-scheme:light)").matches?"light":"dark"))==="dark";r.dataset.theme=dark?"light":"dark"};
+var sh=d.getElementById("sh");
+if(!rm){addEventListener("pointermove",function(e){var x=e.clientX/innerWidth-.5,y=e.clientY/innerHeight-.5;sh.style.setProperty("--ry",(x*40-10)+"deg");sh.style.setProperty("--rx",(8-y*30)+"deg")})}
+var c=d.getElementById("net"),g=c.getContext("2d"),P=[],W,H;
+function rs(){W=c.width=innerWidth;H=c.height=innerHeight;P=[];for(var i=0;i<Math.min(70,W*H/16000|0);i++)P.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3})}
+function col(){return getComputedStyle(r).getPropertyValue("--ac").trim()||"#4fa3d1"}
+function f(){g.clearRect(0,0,W,H);var a=col();g.strokeStyle=a;g.fillStyle=a;for(var i=0;i<P.length;i++){var p=P[i];if(!rm){p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1}g.globalAlpha=.8;g.fillRect(p.x,p.y,2,2);for(var j=i+1;j<P.length;j++){var q=P[j],dx=p.x-q.x,dy=p.y-q.y,dd=dx*dx+dy*dy;if(dd<14000){g.globalAlpha=(1-dd/14000)*.35;g.beginPath();g.moveTo(p.x,p.y);g.lineTo(q.x,q.y);g.stroke()}}}if(!rm)requestAnimationFrame(f)}
+rs();addEventListener("resize",rs);f();
+var box=d.getElementById("rel");
+fetch("https://api.github.com/repos/slimecoding2025/AegisOS/releases").then(function(x){return x.ok?x.json():[]}).then(function(L){
+if(!L.length)return;box.textContent="";
+L.slice(0,12).forEach(function(rel){var el=d.createElement("div");el.style.cssText="padding:10px 0;border-bottom:1px solid var(--bd)";
+var t=d.createElement("b");t.textContent=(rel.name||rel.tag_name)+(rel.prerelease?" (pre-release)":"");el.appendChild(t);
+(rel.assets||[]).forEach(function(s){if(!/^https:\/\/github\.com\//.test(s.browser_download_url))return;var p=d.createElement("div");var a=d.createElement("a");a.href=s.browser_download_url;a.textContent=s.name;p.appendChild(a);p.appendChild(d.createTextNode("  "+(s.size/1048576).toFixed(0)+" MB"));el.appendChild(p)});
+box.appendChild(el)})}).catch(function(){});
+})();
+</script>
+</body>
+</html>
