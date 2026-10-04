@@ -33,6 +33,20 @@ class ShellScripts(unittest.TestCase):
         self.assertIn("missing required tools", r.stderr)
         self.assertEqual(list((ROOT / "dist").glob("*.iso")) if (ROOT / "dist").exists() else [], [])
 
+    def test_size_report_thresholds(self):
+        import tempfile
+        script = str(ROOT / "scripts/size-report.sh")
+        cases = [(1 << 20, 0, "OK:"), (int(1.95 * 1024**3), 0, "WARNING"), (2 * 1024**3 + 1, 2, "OVER")]
+        with tempfile.TemporaryDirectory() as d:
+            for size, rc, word in cases:
+                iso = os.path.join(d, f"t{size}.iso")
+                with open(iso, "wb") as f:
+                    f.truncate(size)  # sparse file: no disk use
+                r = subprocess.run([script, iso], capture_output=True, text=True)
+                self.assertEqual(r.returncode, rc, (size, r.stdout, r.stderr))
+                self.assertIn(word, r.stdout)
+                self.assertIn(f"{size} bytes", r.stdout)
+
     def test_clean_script_is_safe_to_run_twice(self):
         for _ in range(2):
             self.assertEqual(subprocess.run([str(ROOT / "scripts/clean.sh")], capture_output=True).returncode, 0)

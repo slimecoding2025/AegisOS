@@ -7,6 +7,7 @@ set -e
 : "${AEGIS_ARCHIVE_AREAS:=main contrib non-free-firmware}"
 : "${AEGIS_BOOTLOADERS:=grub-efi}"
 : "${AEGIS_INSTALLER:=live}"
+: "${AEGIS_FIRMWARE_BINARY:=false}"
 : "${AEGIS_VERSION:=0.0.0}"
 
 lb config noauto \
@@ -16,6 +17,7 @@ lb config noauto \
     --bootloaders "${AEGIS_BOOTLOADERS}" \
     --archive-areas "${AEGIS_ARCHIVE_AREAS}" \
     --debian-installer "${AEGIS_INSTALLER}" \
+    --firmware-binary "${AEGIS_FIRMWARE_BINARY}" \
     --bootappend-live "boot=live components quiet" \
     --iso-application "AegisOS" \
     --iso-publisher "AegisOS Project" \

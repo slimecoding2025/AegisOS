@@ -24,7 +24,7 @@ fi
 if [ "$(id -u)" -ne 0 ]; then echo "error: live-build must run as root" >&2; exit 1; fi
 # shellcheck disable=SC1090
 source "$PROFILE"
-export AEGIS_DEBIAN_SUITE AEGIS_ARCH AEGIS_ARCHIVE_AREAS AEGIS_BOOTLOADERS AEGIS_INSTALLER
+export AEGIS_DEBIAN_SUITE AEGIS_ARCH AEGIS_ARCHIVE_AREAS AEGIS_BOOTLOADERS AEGIS_INSTALLER AEGIS_FIRMWARE_BINARY
 export AEGIS_VERSION="$VERSION"
 export PYTHONPATH="$ROOT/packages/aegis-core"
 
@@ -62,6 +62,9 @@ size=$(stat -c %s "$DIST/$ISO_NAME")
 [ "$size" -gt 104857600 ] || { echo "error: ISO is suspiciously small ($size bytes)" >&2; exit 1; }
 xorriso -indev "$DIST/$ISO_NAME" -report_el_torito plain 2>&1 | tee "$DIST/iso-boot-report.txt" | grep -qi 'efi' \
   || { echo "error: no EFI boot image found in ISO" >&2; exit 1; }
+
+echo "==> size report"
+"$ROOT/scripts/size-report.sh" "$DIST/$ISO_NAME" "$WORK/binary" || echo "warning: the ISO is over GitHub's 2 GiB release asset limit"
 
 echo "==> checksums"
 ( cd "$DIST" && sha256sum "$ISO_NAME" > SHA256SUMS && sha256sum -c SHA256SUMS )

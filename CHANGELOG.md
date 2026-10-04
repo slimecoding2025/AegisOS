@@ -24,6 +24,10 @@ Pre-alpha. Edit the date if the tag is created on another day.
 ### Not verified
 - Installation to disk with the Debian Installer, VirtualBox, Secure Boot, and installing and running individual tools.
 
+### Changed
+- The installer pool no longer bundles firmware (`--firmware-binary false`): on the 2026-10-04 image it was 259 MiB of a
+  2.008 GiB ISO, which exceeded GitHub's 2 GiB release-asset limit. The resulting size has not been measured yet.
+
 ### Known issues
 - The VMware display does not resize automatically with the window (cause not found).
 - The boot menu still shows Debian branding.

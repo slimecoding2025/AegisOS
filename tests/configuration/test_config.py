@@ -31,9 +31,13 @@ class Config(unittest.TestCase):
         text = (ROOT / "build/config/auto/config").read_text()
         used = set(re.findall(r"--([a-z-]+)", text))
         verified = {"distribution", "architectures", "binary-images", "bootloaders", "archive-areas",
-                    "debian-installer", "bootappend-live", "iso-application", "iso-publisher", "iso-volume"}
+                    "debian-installer", "firmware-binary", "bootappend-live", "iso-application", "iso-publisher", "iso-volume"}
         self.assertEqual(used - verified, set())
         self.assertIn("iso-hybrid", text)
+
+    def test_installer_firmware_pool_is_off_to_stay_under_github_asset_limit(self):
+        self.assertIn("AEGIS_FIRMWARE_BINARY=false", (ROOT / "build/profiles/default.env").read_text())
+        self.assertIn('--firmware-binary "${AEGIS_FIRMWARE_BINARY}"', (ROOT / "build/config/auto/config").read_text())
 
     def test_package_lists_are_plain_names(self):
         for f in (ROOT / "build/config/package-lists").glob("*.list.chroot"):

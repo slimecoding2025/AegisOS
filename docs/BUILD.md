@@ -43,3 +43,25 @@ files included in the image. `scripts/check-package-lists.sh` verifies package n
 - Whether the Debian Installer in live mode works with this configuration
 - Whether the `os-release` diversion survives upgrades
 - Image size and boot behaviour in any hypervisor
+
+## Size budget
+
+GitHub allows less than 2 GiB per release file (2147483648 bytes), so the ISO must stay below that to be published
+as a GitHub Release. `scripts/size-report.sh` prints the margin and the largest parts of the image at the end of
+every build, and the release workflow refuses to publish an ISO at or over the limit.
+
+Measured on the live medium of the 2026-10-04 build (2156599296 bytes, 2.008 GiB, over the limit):
+
+| Part | Size |
+|------|------|
+| `live/filesystem.squashfs` (already xz compressed) | 1.3 GiB |
+| `live/initrd.img-*` | 134 MiB |
+| `pool/` (non-free-firmware 259 MiB, main 154 MiB including the 103 MiB kernel package) | 412 MiB |
+| `install/` | 110 MiB |
+| `pool-udeb/` | 87 MiB |
+
+Levers, with their trade-offs (only the first is applied): `--firmware-binary false` (removes the installer's firmware
+pool; applied), `--firmware-chroot false` (smaller squashfs and initrd, but the live system loses firmware for real
+hardware), `--apt-recommends false` (smaller, may drop desktop pieces), dropping packages such as `firefox-esr`.
+Changing the squashfs compression type will not help: it is already xz. If a full tool set cannot fit under 2 GiB,
+host the ISO outside GitHub and keep checksums and links in the Release.
