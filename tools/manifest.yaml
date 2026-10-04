@@ -14,6 +14,10 @@
 #    from APT), external (not from APT), containerized, development, specialized.
 schema_version: 1
 
+# Verification log (rendered into docs/TOOLS.md). Add a line whenever a host check is performed.
+verification_log:
+  - "2026-10-03: `aegis manifest check-packages` on an AegisOS 0.1.0 live image (Debian 13.7, VMware Workstation, sources main/contrib/non-free-firmware): 95 apt candidates resolved, 13 did not and were moved to external. A candidate only proves apt knows the name; installation and operation were not tested."
+
 defaults:
   bundled: false
   license: unverified
@@ -100,7 +104,7 @@ tools:
   - {name: dnsenum,     category: dns, tier: optional, installation_method: apt, package: dnsenum,        description: "DNS enumeration tool"}
   - {name: dnsrecon,    category: dns, tier: optional, installation_method: apt, package: dnsrecon,       description: "DNS reconnaissance tool"}
   - {name: fierce,      category: dns, tier: optional, installation_method: apt, package: fierce,         description: "DNS reconnaissance scanner"}
-  - {name: amass,       category: dns, tier: optional, installation_method: apt, package: amass,          description: "Attack surface mapping and asset discovery"}
+  - {name: amass,       category: dns, tier: external, installation_method: external,          description: "Attack surface mapping and asset discovery", notes: "Not found in Debian 13 (main, contrib, non-free-firmware) by apt-cache on 2026-10-03; install from the upstream project (not automated)."}
   - {name: subfinder,   category: dns, tier: external, installation_method: external,                      description: "Passive subdomain discovery"}
   - {name: assetfinder, category: dns, tier: external, installation_method: external,                      description: "Find related domains and subdomains"}
   - {name: httpx,       category: dns, tier: external, installation_method: external,                      description: "HTTP probing toolkit (ProjectDiscovery httpx; not the Python library)"}
@@ -109,28 +113,28 @@ tools:
   - {name: burpsuite,   category: web, tier: external, installation_method: external,                      description: "Web security testing platform (proprietary; never bundled)"}
   - {name: ffuf,        category: web, tier: optional, installation_method: apt, package: ffuf,           description: "Fast web fuzzer"}
   - {name: gobuster,    category: web, tier: optional, installation_method: apt, package: gobuster,       description: "Directory, DNS and vhost brute-forcing"}
-  - {name: feroxbuster, category: web, tier: optional, installation_method: apt, package: feroxbuster,    description: "Recursive content discovery"}
-  - {name: nikto,       category: web, tier: optional, installation_method: apt, package: nikto,          description: "Web server scanner"}
+  - {name: feroxbuster, category: web, tier: external, installation_method: external,    description: "Recursive content discovery", notes: "Not found in Debian 13 (main, contrib, non-free-firmware) by apt-cache on 2026-10-03; install from the upstream project (not automated)."}
+  - {name: nikto,       category: web, tier: external, installation_method: external,          description: "Web server scanner", notes: "Not found in Debian 13 (main, contrib, non-free-firmware) by apt-cache on 2026-10-03; install from the upstream project (not automated)."}
   - {name: wfuzz,       category: web, tier: optional, installation_method: apt, package: wfuzz,          description: "Web application fuzzer"}
   - {name: whatweb,     category: web, tier: optional, installation_method: apt, package: whatweb,        description: "Web technology fingerprinting"}
   - {name: nuclei,      category: web, tier: external, installation_method: external,                      description: "Template-based vulnerability scanner"}
   - {name: sqlmap,      category: web, tier: optional, installation_method: apt, package: sqlmap,         description: "SQL injection detection and exploitation tool"}
   - {name: dirsearch,   category: web, tier: optional, installation_method: apt, package: dirsearch,      description: "Web path discovery"}
-  - {name: commix,      category: web, tier: optional, installation_method: apt, package: commix,         description: "Command injection testing tool"}
+  - {name: commix,      category: web, tier: external, installation_method: external,         description: "Command injection testing tool", notes: "Not found in Debian 13 (main, contrib, non-free-firmware) by apt-cache on 2026-10-03; install from the upstream project (not automated)."}
   # ---- osint ----
-  - {name: theharvester, category: osint, tier: optional, installation_method: apt, package: theharvester, description: "Email, subdomain and name gathering"}
+  - {name: theharvester, category: osint, tier: external, installation_method: external, description: "Email, subdomain and name gathering", notes: "Not found in Debian 13 (main, contrib, non-free-firmware) by apt-cache on 2026-10-03; install from the upstream project (not automated)."}
   - {name: spiderfoot,  category: osint, tier: external, installation_method: external,                    description: "OSINT automation platform"}
   - {name: recon-ng,    category: osint, tier: optional, installation_method: apt, package: recon-ng,      description: "Web reconnaissance framework"}
   - {name: sherlock,    category: osint, tier: optional, installation_method: apt, package: sherlock,      description: "Username search across social networks"}
   - {name: holehe,      category: osint, tier: external, installation_method: pipx,                         description: "Check where an email is registered"}
   - {name: photon,      category: osint, tier: external, installation_method: external,                    description: "Fast web crawler for OSINT"}
   - {name: exiftool,    category: osint, also: [forensics], tier: core, installation_method: apt, package: libimage-exiftool-perl, description: "Read and write file metadata"}
-  - {name: metagoofil,  category: osint, tier: optional, installation_method: apt, package: metagoofil,    description: "Public document metadata extraction"}
+  - {name: metagoofil,  category: osint, tier: external, installation_method: external,    description: "Public document metadata extraction", notes: "Not found in Debian 13 (main, contrib, non-free-firmware) by apt-cache on 2026-10-03; install from the upstream project (not automated)."}
   - {name: maltego,     category: osint, tier: external, installation_method: external,                    description: "Link analysis platform (proprietary; never bundled)"}
   # ---- forensics ----
   - {name: autopsy,     category: forensics, tier: optional, installation_method: apt, package: autopsy,       description: "Digital forensics platform GUI"}
   - {name: sleuthkit,   category: forensics, tier: core,     installation_method: apt, package: sleuthkit,     description: "Disk image forensic analysis toolkit"}
-  - {name: volatility3, category: forensics, tier: optional, installation_method: apt, package: volatility3,   description: "Memory forensics framework"}
+  - {name: volatility3, category: forensics, tier: external, installation_method: external,   description: "Memory forensics framework", notes: "Not found in Debian 13 (main, contrib, non-free-firmware) by apt-cache on 2026-10-03; install from the upstream project (not automated)."}
   - {name: binwalk,     category: forensics, also: [reverse-engineering], tier: optional, installation_method: apt, package: binwalk, description: "Firmware analysis and extraction"}
   - {name: foremost,    category: forensics, tier: optional, installation_method: apt, package: foremost,      description: "File carving recovery tool"}
   - {name: scalpel,     category: forensics, tier: optional, installation_method: apt, package: scalpel,       description: "File carving recovery tool"}
@@ -140,7 +144,7 @@ tools:
   - {name: strings,     category: forensics, also: [reverse-engineering], tier: core, installation_method: apt, package: binutils, description: "Extract printable strings from files"}
   # ---- blue-team / soc ----
   - {name: suricata,    category: blue-team, also: [soc], tier: optional, installation_method: apt, package: suricata, description: "Network IDS/IPS and monitoring engine"}
-  - {name: zeek,        category: soc, also: [blue-team], tier: optional, installation_method: apt, package: zeek,     description: "Network security monitor"}
+  - {name: zeek,        category: soc, also: [blue-team], tier: external, installation_method: external,     description: "Network security monitor", notes: "Not found in Debian 13 (main, contrib, non-free-firmware) by apt-cache on 2026-10-03; install from the upstream project (not automated)."}
   - {name: yara,        category: malware-analysis, also: [blue-team, soc], tier: core, installation_method: apt, package: yara, description: "Pattern matching for malware identification"}
   - {name: clamav,      category: blue-team, also: [malware-analysis], tier: optional, installation_method: apt, package: clamav, description: "Open-source antivirus engine"}
   - {name: auditd,      category: blue-team, tier: core,     installation_method: apt, package: auditd,         description: "Linux audit daemon"}
@@ -151,9 +155,9 @@ tools:
   - {name: wazuh,       category: soc, tier: specialized, installation_method: external,                          description: "Security monitoring platform (components only where appropriate)"}
   # ---- reverse engineering / malware ----
   - {name: gdb,         category: reverse-engineering, also: [development], tier: core, installation_method: apt, package: gdb, description: "GNU debugger"}
-  - {name: ghidra,      category: reverse-engineering, also: [malware-analysis], tier: optional, installation_method: apt, package: ghidra, description: "Software reverse engineering suite"}
-  - {name: radare2,     category: reverse-engineering, tier: optional, installation_method: apt, package: radare2,  description: "Reverse engineering framework"}
-  - {name: cutter,      category: reverse-engineering, tier: optional, installation_method: apt, package: cutter-re, description: "Reverse engineering GUI for radare2/rizin"}
+  - {name: ghidra,      category: reverse-engineering, also: [malware-analysis], tier: external, installation_method: external, description: "Software reverse engineering suite", notes: "Not found in Debian 13 (main, contrib, non-free-firmware) by apt-cache on 2026-10-03; install from the upstream project (not automated)."}
+  - {name: radare2,     category: reverse-engineering, tier: external, installation_method: external,  description: "Reverse engineering framework", notes: "Not found in Debian 13 (main, contrib, non-free-firmware) by apt-cache on 2026-10-03; install from the upstream project (not automated)."}
+  - {name: cutter,      category: reverse-engineering, tier: external, installation_method: external, description: "Reverse engineering GUI for radare2/rizin", notes: "Not found in Debian 13 (main, contrib, non-free-firmware) by apt-cache on 2026-10-03; install from the upstream project (not automated)."}
   - {name: objdump,     category: reverse-engineering, tier: core,     installation_method: apt, package: binutils, description: "Display object file information"}
   - {name: readelf,     category: reverse-engineering, tier: core,     installation_method: apt, package: binutils, description: "Display ELF file information"}
   - {name: binutils,    category: reverse-engineering, tier: core,     installation_method: apt, package: binutils, description: "GNU binary utilities"}
@@ -164,7 +168,7 @@ tools:
   - {name: floss,       category: malware-analysis, tier: external, installation_method: external,                  description: "Extract obfuscated strings from malware"}
   # ---- wireless ----
   - {name: aircrack-ng, category: wireless, tier: optional, installation_method: apt, package: aircrack-ng,      description: "Wireless network auditing suite"}
-  - {name: kismet,      category: wireless, tier: optional, installation_method: apt, package: kismet,           description: "Wireless network detector and sniffer"}
+  - {name: kismet,      category: wireless, tier: external, installation_method: external,           description: "Wireless network detector and sniffer", notes: "Not found in Debian 13 (main, contrib, non-free-firmware) by apt-cache on 2026-10-03; install from the upstream project (not automated)."}
   - {name: iw,          category: wireless, tier: core,     installation_method: apt, package: iw,               description: "Wireless device configuration"}
   - {name: wireless-tools, category: wireless, tier: optional, installation_method: apt, package: wireless-tools, description: "Legacy wireless extensions tools"}
   - {name: hcxtools,    category: wireless, tier: optional, installation_method: apt, package: hcxtools,         description: "WPA capture conversion utilities"}
@@ -176,7 +180,7 @@ tools:
   - {name: medusa,      category: password-auditing, tier: optional, installation_method: apt, package: medusa,   description: "Parallel network login auditing"}
   - {name: cewl,        category: password-auditing, tier: optional, installation_method: apt, package: cewl,     description: "Custom wordlist generator from web content"}
   - {name: crunch,      category: password-auditing, tier: optional, installation_method: apt, package: crunch,   description: "Wordlist generator"}
-  - {name: seclists,    category: password-auditing, tier: optional, installation_method: apt, package: seclists, description: "Security tester wordlist collection"}
+  - {name: seclists,    category: password-auditing, tier: external, installation_method: external, description: "Security tester wordlist collection", notes: "Not found in Debian 13 (main, contrib, non-free-firmware) by apt-cache on 2026-10-03; install from the upstream project (not automated)."}
   # ---- active directory ----
   - {name: impacket,    category: active-directory, tier: optional, installation_method: apt, package: python3-impacket, description: "Python network protocol toolkit"}
   - {name: bloodhound,  category: active-directory, tier: external, installation_method: external,                description: "Active Directory attack path analysis"}

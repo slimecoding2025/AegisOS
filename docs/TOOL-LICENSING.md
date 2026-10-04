@@ -36,7 +36,7 @@
 | dnsenum | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
 | dnsrecon | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
 | fierce | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
-| amass | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
+| amass | unverified | unverified | unverified | unverified | no | external | Not found in Debian 13 (main, contrib, non-free-firmware) by apt-cache on 2026-10-03; install from the upstream project (not automated). |
 | subfinder | unverified | unverified | unverified | unverified | no | external | no automated install; follow upstream docs |
 | assetfinder | unverified | unverified | unverified | unverified | no | external | no automated install; follow upstream docs |
 | httpx | unverified | unverified | unverified | unverified | no | external | no automated install; follow upstream docs |
@@ -44,26 +44,26 @@
 | burpsuite | unverified | unverified | unverified | unverified | no | external | no automated install; follow upstream docs |
 | ffuf | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
 | gobuster | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
-| feroxbuster | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
-| nikto | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
+| feroxbuster | unverified | unverified | unverified | unverified | no | external | Not found in Debian 13 (main, contrib, non-free-firmware) by apt-cache on 2026-10-03; install from the upstream project (not automated). |
+| nikto | unverified | unverified | unverified | unverified | no | external | Not found in Debian 13 (main, contrib, non-free-firmware) by apt-cache on 2026-10-03; install from the upstream project (not automated). |
 | wfuzz | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
 | whatweb | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
 | nuclei | unverified | unverified | unverified | unverified | no | external | no automated install; follow upstream docs |
 | sqlmap | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
 | dirsearch | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
-| commix | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
-| theharvester | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
+| commix | unverified | unverified | unverified | unverified | no | external | Not found in Debian 13 (main, contrib, non-free-firmware) by apt-cache on 2026-10-03; install from the upstream project (not automated). |
+| theharvester | unverified | unverified | unverified | unverified | no | external | Not found in Debian 13 (main, contrib, non-free-firmware) by apt-cache on 2026-10-03; install from the upstream project (not automated). |
 | spiderfoot | unverified | unverified | unverified | unverified | no | external | no automated install; follow upstream docs |
 | recon-ng | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
 | sherlock | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
 | holehe | unverified | unverified | unverified | unverified | no | pipx | isolated Python environment; upstream unverified |
 | photon | unverified | unverified | unverified | unverified | no | external | no automated install; follow upstream docs |
 | exiftool | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
-| metagoofil | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
+| metagoofil | unverified | unverified | unverified | unverified | no | external | Not found in Debian 13 (main, contrib, non-free-firmware) by apt-cache on 2026-10-03; install from the upstream project (not automated). |
 | maltego | unverified | unverified | unverified | unverified | no | external | no automated install; follow upstream docs |
 | autopsy | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
 | sleuthkit | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
-| volatility3 | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
+| volatility3 | unverified | unverified | unverified | unverified | no | external | Not found in Debian 13 (main, contrib, non-free-firmware) by apt-cache on 2026-10-03; install from the upstream project (not automated). |
 | binwalk | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
 | foremost | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
 | scalpel | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
@@ -72,7 +72,7 @@
 | dd | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
 | strings | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
 | suricata | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
-| zeek | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
+| zeek | unverified | unverified | unverified | unverified | no | external | Not found in Debian 13 (main, contrib, non-free-firmware) by apt-cache on 2026-10-03; install from the upstream project (not automated). |
 | yara | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
 | clamav | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
 | auditd | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
@@ -82,9 +82,9 @@
 | openscap | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
 | wazuh | unverified | unverified | unverified | unverified | no | external | no automated install; follow upstream docs |
 | gdb | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
-| ghidra | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
-| radare2 | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
-| cutter | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
+| ghidra | unverified | unverified | unverified | unverified | no | external | Not found in Debian 13 (main, contrib, non-free-firmware) by apt-cache on 2026-10-03; install from the upstream project (not automated). |
+| radare2 | unverified | unverified | unverified | unverified | no | external | Not found in Debian 13 (main, contrib, non-free-firmware) by apt-cache on 2026-10-03; install from the upstream project (not automated). |
+| cutter | unverified | unverified | unverified | unverified | no | external | Not found in Debian 13 (main, contrib, non-free-firmware) by apt-cache on 2026-10-03; install from the upstream project (not automated). |
 | objdump | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
 | readelf | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
 | binutils | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
@@ -94,7 +94,7 @@
 | capa | unverified | unverified | unverified | unverified | no | external | no automated install; follow upstream docs |
 | floss | unverified | unverified | unverified | unverified | no | external | no automated install; follow upstream docs |
 | aircrack-ng | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
-| kismet | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
+| kismet | unverified | unverified | unverified | unverified | no | external | Not found in Debian 13 (main, contrib, non-free-firmware) by apt-cache on 2026-10-03; install from the upstream project (not automated). |
 | iw | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
 | wireless-tools | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
 | hcxtools | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
@@ -105,7 +105,7 @@
 | medusa | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
 | cewl | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
 | crunch | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
-| seclists | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
+| seclists | unverified | unverified | unverified | unverified | no | external | Not found in Debian 13 (main, contrib, non-free-firmware) by apt-cache on 2026-10-03; install from the upstream project (not automated). |
 | impacket | unverified | unverified | unverified | unverified | no | apt | candidate package unverified |
 | bloodhound | unverified | unverified | unverified | unverified | no | external | no automated install; follow upstream docs |
 | netexec | unverified | unverified | unverified | unverified | no | pipx | isolated Python environment; upstream unverified |

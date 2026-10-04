@@ -19,7 +19,7 @@ Status: **PARTIALLY VERIFIED** - one observed run, described below. Everything n
 - Free space on `/` in the live session was about 944 MiB. The live root is memory-backed, so installing
   large tool sets in a live session can exhaust it; give the VM more RAM or install to disk.
 
-## Known defects found in that run (fixes committed, not yet re-tested in a VM)
+## Defects found in the first run (all fixed; confirmed in the second run below)
 
 - `/etc/os-release` still said Debian: the identification hook was in the wrong live-build directory.
 - Desktop wallpaper stayed the XFCE default. Cause confirmed by experiment: after choosing the wallpaper by
@@ -34,11 +34,28 @@ Status: **PARTIALLY VERIFIED** - one observed run, described below. Everything n
   `apt-get update` worked against them. The doctor now reports an unsigned local `file:` repository as a
   WARN and keeps FAIL for unsigned network repositories.
 
+## Second run (2026-10-04, rebuilt ISO, reported with screenshots and command output)
+
+- New VM `AegisOS-test2`: VMware Workstation 17 Pro, guest type "Debian 12.x 64-bit", 2 vCPUs, 8 GB RAM, 40 GB disk,
+  NAT, UEFI firmware. The GRUB menu offered "Live system", "Live system (fail-safe mode)", "Start installer",
+  "Start installer with speech synthesis", "Advanced install options" and "Utilities". The menu header still shows
+  Debian branding and a Debian logo; AegisOS branding of the boot menu is not done.
+- Booted the first entry (Live system). The AegisOS wallpaper showed at first login and the welcome terminal opened.
+- `/etc/os-release`: `ID=aegisos`, `PRETTY_NAME="AegisOS 0.1.0"`.
+- `aegis doctor`: 11 PASS, 2 WARN, 0 FAIL. WARN 1: the unsigned local repository on the live medium plus plain-HTTP
+  Debian mirrors. WARN 2: `NTPSynchronized=no` (cause not investigated).
+- `xfconf-query` showed the Aegis wallpaper set on `monitor0`, `monitor1`, `monitorVirtual-1` and `monitorVirtual1`.
+- Free space on `/` was 3.8 GiB with 8 GB RAM.
+- `apt-get update` succeeded against the Debian mirrors. `aegis manifest check-packages`: 95 apt candidates resolved,
+  13 did not (see `docs/TOOLS.md`, verification log).
+- Clipboard between Windows and the guest worked.
+- Display did NOT resize automatically with the VMware window; cause not diagnosed.
+
 ## NOT VERIFIED
 
-Firmware settings other than "UEFI was in use", clipboard, drag and drop, display auto-resize, shared folders,
-installer ("Install" boot entry) and installation to a virtual disk, persistence across reboot, sound, USB,
-any VMware version other than the one used.
+Drag and drop, shared folders, display auto-resize (observed failing, cause unknown), the installer ("Start
+installer" entry exists but was not run) and installation to a virtual disk, persistence across reboot, sound, USB,
+Secure Boot, any VMware version other than Workstation 17 Pro, whether any tool actually installs and runs.
 
 ## Suggested VM settings (starting point, not a tested configuration)
 

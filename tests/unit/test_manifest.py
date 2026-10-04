@@ -64,7 +64,46 @@ class RealManifest(unittest.TestCase):
         self.assertEqual(pl, sorted(set(pl)))
 
 
+class HostVerifiedFindings(unittest.TestCase):
+    """Results of `aegis manifest check-packages` on a Debian 13.7 live image (2026-10-03)."""
+
+    NOT_IN_DEBIAN_13 = ("amass feroxbuster nikto commix theharvester metagoofil volatility3 zeek ghidra "
+                        "radare2 cutter kismet seclists").split()
+
+    def test_unresolved_tools_are_external_with_evidence_note(self):
+        m = manifest.load(ROOT / "tools" / "manifest.yaml")
+        for name in self.NOT_IN_DEBIAN_13:
+            t = m.get(name)
+            self.assertEqual(t.installation_method, "external", name)
+            self.assertEqual(t.tier, "external", name)
+            self.assertIsNone(t.package, name)
+            self.assertIn("2026-10-03", t.notes, name)
+
+    def test_verification_log_present(self):
+        raw = manifest.load_raw(ROOT / "tools" / "manifest.yaml")
+        self.assertTrue(any("95" in x and "13" in x for x in raw["verification_log"]))
+
+    def test_apt_entries_count(self):
+        m = manifest.load(ROOT / "tools" / "manifest.yaml")
+        self.assertEqual(sum(t.installation_method == "apt" for t in m.tools), 95)
+
+
 class Validation(unittest.TestCase):
+    def test_unknown_tool_field_is_rejected(self):
+        raw = base()
+        raw["tools"][0]["licence"] = "typo"
+        self.assertTrue(any("unknown field 'licence'" in e for e in manifest.validate(raw)[0]))
+
+    def test_notes_must_be_string(self):
+        raw = base()
+        raw["tools"][0]["notes"] = 5
+        self.assertTrue(any("notes must be a string" in e for e in manifest.validate(raw)[0]))
+
+    def test_verification_log_must_be_list_of_strings(self):
+        raw = base()
+        raw["verification_log"] = "x"
+        self.assertTrue(any("verification_log" in e for e in manifest.validate(raw)[0]))
+
     def errs(self, mutate):
         raw = base()
         mutate(raw)

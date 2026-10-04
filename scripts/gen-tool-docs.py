@@ -16,6 +16,11 @@ def tools_md(m):
            "resolves on a Debian 13 host (`aegis manifest check-packages`). Tiers: core (planned for the ISO), "
            "optional (installable from APT), external, containerized, development, specialized.\n",
            "Offensive-security tools are for **authorized testing and education only**.\n"]
+    log = m.raw.get("verification_log", [])
+    if log:
+        out.append("## Verification log\n")
+        out += [f"- {x}" for x in log]
+        out.append("")
     for cat, meta in m.categories.items():
         out.append(f"\n## {cat} ({meta['title']})\n")
         out.append("| Tool | Tier | Method | Candidate package | Description |\n|---|---|---|---|---|")
@@ -40,7 +45,7 @@ def licensing_md(m):
            "| Name | License | Homepage | Source | Redistribution | Bundled | Installation | Notes |",
            "|---|---|---|---|---|---|---|---|"]
     for t in m.tools:
-        note = {"external": "no automated install; follow upstream docs",
+        note = t.data.get("notes") or {"external": "no automated install; follow upstream docs",
                 "container": "run as a container; image provenance unverified",
                 "pipx": "isolated Python environment; upstream unverified"}.get(t.installation_method, "candidate package unverified")
         out.append(f"| {t.name} | {t.license} | {t.homepage} | unverified | {t.redistribution} | "

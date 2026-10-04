@@ -6,6 +6,10 @@ Everything here is derived from `tools/manifest.yaml`. A package name is a *cand
 
 Offensive-security tools are for **authorized testing and education only**.
 
+## Verification log
+
+- 2026-10-03: `aegis manifest check-packages` on an AegisOS 0.1.0 live image (Debian 13.7, VMware Workstation, sources main/contrib/non-free-firmware): 95 apt candidates resolved, 13 did not and were moved to external. A candidate only proves apt knows the name; installation and operation were not tested.
+
 
 ## network (Network Security)
 
@@ -39,7 +43,7 @@ Offensive-security tools are for **authorized testing and education only**.
 | dnsenum | optional | apt | dnsenum | DNS enumeration tool |
 | dnsrecon | optional | apt | dnsrecon | DNS reconnaissance tool |
 | fierce | optional | apt | fierce | DNS reconnaissance scanner |
-| amass | optional | apt | amass | Attack surface mapping and asset discovery |
+| amass | external | external | - | Attack surface mapping and asset discovery |
 | subfinder | external | external | - | Passive subdomain discovery |
 | assetfinder | external | external | - | Find related domains and subdomains |
 | httpx | external | external | - | HTTP probing toolkit (ProjectDiscovery httpx; not the Python library) |
@@ -52,27 +56,27 @@ Offensive-security tools are for **authorized testing and education only**.
 | burpsuite | external | external | - | Web security testing platform (proprietary; never bundled) |
 | ffuf | optional | apt | ffuf | Fast web fuzzer |
 | gobuster | optional | apt | gobuster | Directory, DNS and vhost brute-forcing |
-| feroxbuster | optional | apt | feroxbuster | Recursive content discovery |
-| nikto | optional | apt | nikto | Web server scanner |
+| feroxbuster | external | external | - | Recursive content discovery |
+| nikto | external | external | - | Web server scanner |
 | wfuzz | optional | apt | wfuzz | Web application fuzzer |
 | whatweb | optional | apt | whatweb | Web technology fingerprinting |
 | nuclei | external | external | - | Template-based vulnerability scanner |
 | sqlmap | optional | apt | sqlmap | SQL injection detection and exploitation tool |
 | dirsearch | optional | apt | dirsearch | Web path discovery |
-| commix | optional | apt | commix | Command injection testing tool |
+| commix | external | external | - | Command injection testing tool |
 
 ## osint (OSINT)
 
 | Tool | Tier | Method | Candidate package | Description |
 |---|---|---|---|---|
-| theharvester | optional | apt | theharvester | Email, subdomain and name gathering |
+| theharvester | external | external | - | Email, subdomain and name gathering |
 | spiderfoot | external | external | - | OSINT automation platform |
 | recon-ng | optional | apt | recon-ng | Web reconnaissance framework |
 | sherlock | optional | apt | sherlock | Username search across social networks |
 | holehe | external | pipx | - | Check where an email is registered |
 | photon | external | external | - | Fast web crawler for OSINT |
 | exiftool | core | apt | libimage-exiftool-perl | Read and write file metadata |
-| metagoofil | optional | apt | metagoofil | Public document metadata extraction |
+| metagoofil | external | external | - | Public document metadata extraction |
 | maltego | external | external | - | Link analysis platform (proprietary; never bundled) |
 
 ## forensics (Digital Forensics)
@@ -82,7 +86,7 @@ Offensive-security tools are for **authorized testing and education only**.
 | exiftool | core | apt | libimage-exiftool-perl | Read and write file metadata |
 | autopsy | optional | apt | autopsy | Digital forensics platform GUI |
 | sleuthkit | core | apt | sleuthkit | Disk image forensic analysis toolkit |
-| volatility3 | optional | apt | volatility3 | Memory forensics framework |
+| volatility3 | external | external | - | Memory forensics framework |
 | binwalk | optional | apt | binwalk | Firmware analysis and extraction |
 | foremost | optional | apt | foremost | File carving recovery tool |
 | scalpel | optional | apt | scalpel | File carving recovery tool |
@@ -96,7 +100,7 @@ Offensive-security tools are for **authorized testing and education only**.
 | Tool | Tier | Method | Candidate package | Description |
 |---|---|---|---|---|
 | suricata | optional | apt | suricata | Network IDS/IPS and monitoring engine |
-| zeek | optional | apt | zeek | Network security monitor |
+| zeek | external | external | - | Network security monitor |
 | yara | core | apt | yara | Pattern matching for malware identification |
 | clamav | optional | apt | clamav | Open-source antivirus engine |
 | auditd | core | apt | auditd | Linux audit daemon |
@@ -108,7 +112,7 @@ Offensive-security tools are for **authorized testing and education only**.
 | Tool | Tier | Method | Candidate package | Description |
 |---|---|---|---|---|
 | suricata | optional | apt | suricata | Network IDS/IPS and monitoring engine |
-| zeek | optional | apt | zeek | Network security monitor |
+| zeek | external | external | - | Network security monitor |
 | yara | core | apt | yara | Pattern matching for malware identification |
 | osquery | external | external | - | SQL-based endpoint instrumentation |
 | falco | external | external | - | Runtime security monitoring |
@@ -121,9 +125,9 @@ Offensive-security tools are for **authorized testing and education only**.
 | binwalk | optional | apt | binwalk | Firmware analysis and extraction |
 | strings | core | apt | binutils | Extract printable strings from files |
 | gdb | core | apt | gdb | GNU debugger |
-| ghidra | optional | apt | ghidra | Software reverse engineering suite |
-| radare2 | optional | apt | radare2 | Reverse engineering framework |
-| cutter | optional | apt | cutter-re | Reverse engineering GUI for radare2/rizin |
+| ghidra | external | external | - | Software reverse engineering suite |
+| radare2 | external | external | - | Reverse engineering framework |
+| cutter | external | external | - | Reverse engineering GUI for radare2/rizin |
 | objdump | core | apt | binutils | Display object file information |
 | readelf | core | apt | binutils | Display ELF file information |
 | binutils | core | apt | binutils | GNU binary utilities |
@@ -137,7 +141,7 @@ Offensive-security tools are for **authorized testing and education only**.
 |---|---|---|---|---|
 | yara | core | apt | yara | Pattern matching for malware identification |
 | clamav | optional | apt | clamav | Open-source antivirus engine |
-| ghidra | optional | apt | ghidra | Software reverse engineering suite |
+| ghidra | external | external | - | Software reverse engineering suite |
 | strace | core | apt | strace | Trace system calls |
 | ltrace | core | apt | ltrace | Trace library calls |
 | capa | external | external | - | Identify capabilities in executable files |
@@ -148,7 +152,7 @@ Offensive-security tools are for **authorized testing and education only**.
 | Tool | Tier | Method | Candidate package | Description |
 |---|---|---|---|---|
 | aircrack-ng | optional | apt | aircrack-ng | Wireless network auditing suite |
-| kismet | optional | apt | kismet | Wireless network detector and sniffer |
+| kismet | external | external | - | Wireless network detector and sniffer |
 | iw | core | apt | iw | Wireless device configuration |
 | wireless-tools | optional | apt | wireless-tools | Legacy wireless extensions tools |
 | hcxtools | optional | apt | hcxtools | WPA capture conversion utilities |
@@ -164,7 +168,7 @@ Offensive-security tools are for **authorized testing and education only**.
 | medusa | optional | apt | medusa | Parallel network login auditing |
 | cewl | optional | apt | cewl | Custom wordlist generator from web content |
 | crunch | optional | apt | crunch | Wordlist generator |
-| seclists | optional | apt | seclists | Security tester wordlist collection |
+| seclists | external | external | - | Security tester wordlist collection |
 
 ## active-directory (Network Security)
 

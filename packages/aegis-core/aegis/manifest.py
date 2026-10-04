@@ -13,6 +13,8 @@ TIERS = {"core", "optional", "external", "containerized", "development", "specia
 METHODS = {"apt", "external", "pipx", "container"}
 REDISTRIBUTION = {"unverified", "allowed", "not-allowed"}
 REQUIRED_TOOL_FIELDS = ("name", "category", "tier", "installation_method", "description")
+TOOL_KEYS = {"name", "category", "also", "tier", "installation_method", "package", "description", "bundled",
+             "license", "homepage", "documentation", "redistribution", "version", "dependencies", "notes"}
 NAME_RE = re.compile(r"^[a-z0-9][a-z0-9.+_-]*$")
 PKG_RE = re.compile(r"^[a-z0-9][a-z0-9.+-]+$")
 URL_RE = re.compile(r"^https://[^\s]+$")
@@ -102,6 +104,9 @@ def validate(raw: dict) -> tuple[list[str], list[str]]:
     warns: list[str] = []
     if raw.get("schema_version") != 1:
         errors.append("schema_version must be 1")
+    log = raw.get("verification_log", [])
+    if not isinstance(log, list) or not all(isinstance(x, str) for x in log):
+        errors.append("verification_log must be a list of strings")
     cats = raw.get("categories") or {}
     profiles = raw.get("profiles") or {}
     if not cats:
@@ -116,6 +121,11 @@ def validate(raw: dict) -> tuple[list[str], list[str]]:
     for i, t in enumerate(m.tools):
         d = t.data
         label = d.get("name", f"#{i}")
+        for k in d:
+            if k not in TOOL_KEYS:
+                errors.append(f"{label}: unknown field '{k}'")
+        if "notes" in d and not isinstance(d["notes"], str):
+            errors.append(f"{label}: notes must be a string")
         for f in REQUIRED_TOOL_FIELDS:
             if not d.get(f):
                 errors.append(f"{label}: missing required field '{f}'")
