@@ -9,6 +9,7 @@ Offensive-security tools are for **authorized testing and education only**.
 ## Verification log
 
 - 2026-10-03: `aegis manifest check-packages` on an AegisOS 0.1.0 live image (Debian 13.7, VMware Workstation, sources main/contrib/non-free-firmware): 95 apt candidates resolved, 13 did not and were moved to external. A candidate only proves apt knows the name; installation and operation were not tested.
+- 2026-10-04: GitHub Actions workflow `test` (run #4, commit c04a7c4) finished successfully. It includes the `trixie-packages` job, which fails if any package in the ISO package lists or the core tier has no candidate on a `debian:trixie` container, so those names resolve there. Job details were not inspected beyond the overall success status.
 
 
 ## network (Network Security)

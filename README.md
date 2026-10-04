@@ -27,7 +27,8 @@ network analysis, reverse engineering, and security education. Base: Debian 13 "
 | Aegis CLI, doctor, hardening, net, Security Center backend, manifest validator | VERIFIED by tests in the dev sandbox (Ubuntu 24.04 host) |
 | `.deb` package build and installed-layout run | VERIFIED (dpkg-deb, extracted layout) |
 | Booted AegisOS 0.1.0 live image in VMware Workstation 17 Pro (UEFI): `os-release`, `aegis doctor`, `aegis security-center`, `aegis-net`, `aegis hardening apply/revert`, `aegis manifest check-packages` | VERIFIED once, 2026-10-04 (see `docs/VMWARE.md`) |
-| ShellCheck | Ran in CI and reported findings (fixed); re-run result NOT YET CONFIRMED |
+| ShellCheck, pytest, manifest validation, `.deb` build, static verification in CI | VERIFIED: workflow `test` run #4 green (after fixing the findings of runs #1-#3) |
+| ISO package lists and core-tier package names on `debian:trixie` | VERIFIED by the same green run (name resolution only; installation of every package is not separately tested) |
 | Debian package names resolving on trixie | NOT VERIFIED (CI job `trixie-packages` checks) |
 | ISO build in GitHub Actions, live boot with UEFI | VERIFIED (build #1 succeeded; boot observed in VMware) |
 | Installer ("Start installer" entry exists), installation to disk | NOT VERIFIED |
