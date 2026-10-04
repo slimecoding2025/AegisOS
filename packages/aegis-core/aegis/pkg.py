@@ -1,12 +1,20 @@
 """Thin, safe wrappers around apt/dpkg. Aegis never replaces apt; it calls it."""
 from __future__ import annotations
 
+import os
 import shutil
 import subprocess
 
+# Debian keeps administration tools (nft, iptables, ufw, ...) in sbin directories that are not on an
+# unprivileged user's PATH. Observed on AegisOS 0.1.0: as a normal user the Security Center claimed
+# "no firewall tool installed" although nft was present.
+SBIN_DIRS = ["/usr/local/sbin", "/usr/sbin", "/sbin"]
+
 
 def have(cmd: str) -> bool:
-    return shutil.which(cmd) is not None
+    path = os.environ.get("PATH", "")
+    extra = [d for d in SBIN_DIRS if d not in path.split(os.pathsep)]
+    return shutil.which(cmd, path=os.pathsep.join([path, *extra])) is not None
 
 
 def run(cmd: list[str], timeout: int = 60) -> subprocess.CompletedProcess:

@@ -2,7 +2,7 @@
 # Run every check that is possible on this machine and say clearly what was skipped.
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-cd "$ROOT"
+cd "$ROOT" || exit 1
 export PYTHONPATH="$ROOT/packages/aegis-core"
 rc=0
 

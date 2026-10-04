@@ -48,6 +48,16 @@ Status: **PARTIALLY VERIFIED** - one observed run, described below. Everything n
 - Free space on `/` was 3.8 GiB with 8 GB RAM.
 - `apt-get update` succeeded against the Debian mirrors. `aegis manifest check-packages`: 95 apt candidates resolved,
   13 did not (see `docs/TOOLS.md`, verification log).
+- `aegis security-center` showed real values (kernel, CPU, 7.7 GiB RAM, interface `ens33` 192.168.254.131, DNS).
+  As a normal user it said "no firewall tool installed"; as root it said "nftables ruleset empty". The first was a
+  bug: `nft` lives in `/usr/sbin`, which is not on a normal user's PATH. Fixed (not yet re-tested in a VM). With
+  root, process names appeared next to the listening sockets (all `avahi-daemon`, UDP only, no TCP listeners).
+- `aegis hardening apply --yes` wrote `/etc/sysctl.d/90-aegis-hardening.conf` and the audit then showed 10 of 10
+  settings compliant. `aegis hardening revert --yes` removed the drop-in and its state file, and the audit went back
+  to the same four compliant settings seen before `apply` (the six others returned to their previous values).
+  This is the first execution of apply/revert against a real `/etc` and live kernel settings.
+- `aegis install nmap --dry-run` reported "already installed" (nmap is in the image); the tool-install path itself
+  (a real `apt-get install` through `aegis`) was NOT run.
 - Clipboard between Windows and the guest worked.
 - Display did NOT resize automatically with the VMware window; cause not diagnosed.
 

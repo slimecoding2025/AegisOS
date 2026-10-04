@@ -14,7 +14,8 @@ python3 -m aegis.cli doctor
 
 `make test`. The unit tests parse fixture files for `/proc` data, use temporary roots for hardening, and start
 the Security Center server on an ephemeral localhost port. Hardening `apply`/`revert` are tested against a
-temporary root; they were **not** executed against the real `/etc` of the sandbox.
+temporary root. They were additionally run for real on a booted AegisOS live image in VMware on 2026-10-04
+(apply, audit, revert; see `docs/VMWARE.md`), but not in the development sandbox.
 
 ## Verification record of the development sandbox
 

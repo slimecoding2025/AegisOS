@@ -5,10 +5,9 @@
 An open-source Linux distribution project for cybersecurity, defensive security, digital forensics,
 network analysis, reverse engineering, and security education. Base: Debian 13 "trixie".
 
-> **Project status: pre-alpha (0.1.0).** The tooling (`aegis`, `aegis-net`, `aegis doctor`,
-> `aegis hardening`, Security Center backend, tool manifest, `.deb` packaging, CI, live-build
-> configuration) exists and is tested. **No ISO has been built or booted yet** - see
-> [Verification status](#verification-status).
+> **Project status: pre-alpha (0.1.0).** The tooling exists and is tested. An ISO has been built by
+> GitHub Actions and booted (live session, UEFI) in VMware Workstation. Installation to disk, VirtualBox
+> and most tools are untested - see [Verification status](#verification-status).
 
 ## Features
 
@@ -27,13 +26,16 @@ network analysis, reverse engineering, and security education. Base: Debian 13 "
 |------|--------|
 | Aegis CLI, doctor, hardening, net, Security Center backend, manifest validator | VERIFIED by tests in the dev sandbox (Ubuntu 24.04 host) |
 | `.deb` package build and installed-layout run | VERIFIED (dpkg-deb, extracted layout) |
-| ShellCheck | NOT VERIFIED (not installed in the dev sandbox; CI runs it) |
+| Booted AegisOS 0.1.0 live image in VMware Workstation 17 Pro (UEFI): `os-release`, `aegis doctor`, `aegis security-center`, `aegis-net`, `aegis hardening apply/revert`, `aegis manifest check-packages` | VERIFIED once, 2026-10-04 (see `docs/VMWARE.md`) |
+| ShellCheck | Ran in CI and reported findings (fixed); re-run result NOT YET CONFIRMED |
 | Debian package names resolving on trixie | NOT VERIFIED (CI job `trixie-packages` checks) |
-| ISO build, live boot, installer, UEFI boot | NOT VERIFIED |
-| VMware, VirtualBox | NOT VERIFIED |
-| Desktop rendering, wallpaper, menu | NOT VERIFIED |
+| ISO build in GitHub Actions, live boot with UEFI | VERIFIED (build #1 succeeded; boot observed in VMware) |
+| Installer ("Start installer" entry exists), installation to disk | NOT VERIFIED |
+| VMware Workstation: display auto-resize | observed NOT working, cause unknown |
+| VirtualBox | NOT VERIFIED |
+| Desktop wallpaper | VERIFIED in VMware after a fix (menu categories NOT VERIFIED) |
 
-No screenshots are included because none have been taken.
+No screenshots are included in the repository yet.
 
 ## Quick start (verified commands)
 
